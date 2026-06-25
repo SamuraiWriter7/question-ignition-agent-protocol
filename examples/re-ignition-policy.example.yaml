@@ -1,0 +1,189 @@
+layer_id: re-ignition-policy
+name: Re-Ignition Policy
+version: v0.5.0-candidate
+
+description: >
+  A final decision layer that determines whether a reasoning cycle should
+  conclude, hold, request human review, return to an earlier layer, or
+  re-ignite as a refined question.
+
+purpose: >
+  To prevent endless continuation by allowing re-ignition only when the
+  previous reasoning cycle has passed through verification, compression,
+  trace preservation, and loop control.
+
+position:
+  previous_layer: compression
+  current_layer: re_ignition_policy
+  next_layer: terminal_or_new_cycle
+
+decision_types:
+  - conclude
+  - hold
+  - request_human_review
+  - return_to_counter_question
+  - return_to_self_dialogue
+  - continue_to_compression
+  - reignite_with_refined_question
+  - stop_cycle
+
+responsibilities:
+  - determine_cycle_conclusion
+  - detect_missing_evidence
+  - detect_unresolved_contradictions
+  - route_to_previous_layer
+  - determine_human_review_need
+  - generate_refined_next_question
+  - prevent_endless_reignition
+  - preserve_cross_cycle_traceability
+
+input_contract:
+  required_inputs:
+    - initial_question
+    - compression_summary
+    - verification_findings
+    - evidence_findings
+    - contradiction_findings
+    - unsupported_inference_findings
+    - confidence_adjustments
+    - summary_for_compression
+    - previous_decision
+  optional_inputs:
+    - prior_trace
+    - cycle_history
+    - user_intent
+    - risk_context
+    - source_context
+    - known_constraints
+    - cost_context
+    - human_feedback
+
+output_contract:
+  required_outputs:
+    - decision
+    - reason
+    - source_layer
+    - next_layer
+    - refined_question
+    - requires_human_review
+    - cycle_status
+    - trace_link
+
+re_ignition_decisions:
+  - decision: conclude
+    reason: >
+      The current reasoning cycle has produced a verified and compressed
+      summary with no blocking contradiction or missing evidence.
+    source_layer: compression
+    next_layer: terminal_conclusion
+    refined_question: null
+    requires_human_review: false
+    cycle_status: completed
+    trace_link: trace-qiae-v0.5-example-001
+
+  - decision: hold
+    reason: >
+      Evidence remains insufficient for final conclusion, but the reasoning
+      chain is traceable and does not require immediate human review.
+    source_layer: verification_governor
+    next_layer: held_state
+    refined_question: null
+    requires_human_review: false
+    cycle_status: held
+    trace_link: trace-qiae-v0.5-example-002
+
+  - decision: return_to_counter_question
+    reason: >
+      Verification detected unresolved ambiguity in the original premise, so
+      the cycle should return to counter-questioning before further reasoning.
+    source_layer: verification_governor
+    next_layer: counter_question
+    refined_question: null
+    requires_human_review: false
+    cycle_status: returned
+    trace_link: trace-qiae-v0.5-example-003
+
+  - decision: return_to_self_dialogue
+    reason: >
+      The verification layer detected a weak hypothesis that should be revised
+      through another controlled self-dialogue pass.
+    source_layer: verification_governor
+    next_layer: self_dialogue
+    refined_question: null
+    requires_human_review: false
+    cycle_status: returned
+    trace_link: trace-qiae-v0.5-example-004
+
+  - decision: request_human_review
+    reason: >
+      The cycle contains unresolved risk and insufficient evidence for safe
+      autonomous continuation, so human review is required before proceeding.
+    source_layer: verification_governor
+    next_layer: human_review
+    refined_question: null
+    requires_human_review: true
+    cycle_status: human_review_required
+    trace_link: trace-qiae-v0.5-example-005
+
+  - decision: reignite_with_refined_question
+    reason: >
+      The current cycle produced a verified and compressed next inquiry that
+      can safely start a new reasoning cycle.
+    source_layer: compression
+    next_layer: ignition
+    refined_question: >
+      Under what conditions should a verified hypothesis become a new
+      ignition question for the next reasoning cycle?
+    requires_human_review: false
+    cycle_status: reignited
+    trace_link: trace-qiae-v0.5-example-006
+
+  - decision: stop_cycle
+    reason: >
+      The reasoning chain has reached the maximum allowed re-ignition count
+      and repeated refinement was detected.
+    source_layer: re_ignition_policy
+    next_layer: terminal_stop
+    refined_question: null
+    requires_human_review: false
+    cycle_status: stopped
+    trace_link: trace-qiae-v0.5-example-007
+
+decision_policy:
+  allowed_decisions:
+    - conclude
+    - hold
+    - request_human_review
+    - return_to_counter_question
+    - return_to_self_dialogue
+    - continue_to_compression
+    - reignite_with_refined_question
+    - stop_cycle
+  default_decision: conclude
+
+terminal_decisions:
+  - conclude
+  - hold
+  - request_human_review
+  - stop_cycle
+
+reignition_decisions:
+  - return_to_counter_question
+  - return_to_self_dialogue
+  - continue_to_compression
+  - reignite_with_refined_question
+
+loop_controls:
+  max_reignition_count: 3
+  require_refined_question: true
+  require_trace_link: true
+  detect_repeated_refinement: true
+  stop_on_repeated_loop: true
+
+safety_controls:
+  allow_reignition_only_after_verification: true
+  allow_reignition_only_after_compression: true
+  human_review_gate: true
+  cost_budget_check_required: true
+  evidence_gap_check_required: true
+  contradiction_check_required: true
