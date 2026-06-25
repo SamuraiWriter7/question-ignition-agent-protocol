@@ -2,17 +2,17 @@ engine_id: question-ignition-autonomous-engine-v0.1
 name: Question-Ignition Autonomous Engine
 description: >
   A controlled reasoning engine that treats a question as an ignition device
-  and safely circulates reasoning through counter-questioning, self-dialogue,
-  derived questions, verification, compression, and stop or re-ignition conditions.
+  and circulates reasoning through counter-questioning, self-dialogue,
+  derived questions, verification, compression, and stop-or-reignite conditions.
 
 cycle:
   phases:
     - question
-    - counter_question
-    - self_dialogue
-    - derived_questions
+    - counter-question
+    - self-dialogue
+    - derived-questions
     - verification
-    - conclude_or_reignite
+    - conclude-or-reignite
 
 layers:
   - id: ignition
@@ -23,11 +23,11 @@ layers:
     name: Decomposition Layer
     role: Decomposes the question into smaller reasoning units.
 
-  - id: counter_question
+  - id: counter-question
     name: Counter-Question Layer
     role: Generates counter-questions and destabilizes hidden premises.
 
-  - id: self_dialogue
+  - id: self-dialogue
     name: Self-Dialogue Layer
     role: Develops hypotheses through structured internal question-and-answer cycles.
 
@@ -43,7 +43,7 @@ layers:
     name: Compression Layer
     role: Compresses excessive question branches back into usable structure.
 
-  - id: stop_or_reignite
+  - id: stop-or-reignite
     name: Stop / Re-Ignition Gate
     role: Determines whether to stop, hold, request review, or re-ignite the reasoning cycle.
 
@@ -76,18 +76,15 @@ semantics:
       - "Does case B cause the structure to fail?"
       - "Can this be connected to C?"
 
-roles:
-  - name: counter_question
-    function: Destabilizes premises.
-
-  - name: self_dialogue
-    function: Expands reasoning internally.
-
-  - name: verification
-    function: Prevents runaway reasoning.
-
-  - name: compression
-    function: Returns expanded reasoning to usable structure.
+  roles:
+    - name: counter_question
+      function: Destabilizes premises.
+    - name: self_dialogue
+      function: Expands reasoning internally.
+    - name: verification
+      function: Prevents runaway reasoning.
+    - name: compression
+      function: Returns expanded reasoning to usable structure.
 
 multi_model_design:
   small_model:
@@ -127,7 +124,7 @@ output_contract:
     - reignite
     - human_review_required
 
-trace_required: true
+  trace_required: true
 
 naming:
   primary_name: Question-Ignition Autonomous Engine
