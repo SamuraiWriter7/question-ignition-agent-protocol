@@ -159,19 +159,20 @@ decision_policy:
     - continue_to_compression
     - reignite_with_refined_question
     - stop_cycle
+
   default_decision: conclude
 
-terminal_decisions:
-  - conclude
-  - hold
-  - request_human_review
-  - stop_cycle
+  terminal_decisions:
+    - conclude
+    - hold
+    - request_human_review
+    - stop_cycle
 
-reignition_decisions:
-  - return_to_counter_question
-  - return_to_self_dialogue
-  - continue_to_compression
-  - reignite_with_refined_question
+  reignition_decisions:
+    - return_to_counter_question
+    - return_to_self_dialogue
+    - continue_to_compression
+    - reignite_with_refined_question
 
 loop_controls:
   max_reignition_count: 3
