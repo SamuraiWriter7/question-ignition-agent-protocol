@@ -1,0 +1,338 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://example.org/schemas/self-dialogue-loop.schema.json",
+"title": "Self-Dialogue Loop",
+"description": "Schema for defining the Self-Dialogue Loop inside the Question-Ignition Autonomous Engine.",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"layer_id",
+"name",
+"version",
+"description",
+"purpose",
+"position",
+"self_dialogue_modes",
+"responsibilities",
+"input_contract",
+"output_contract",
+"dialogue_turns",
+"decision_policy",
+"safety_controls"
+],
+"properties": {
+"layer_id": {
+"type": "string",
+"description": "Machine-readable identifier for the layer.",
+"minLength": 1,
+"pattern": "^[a-z0-9][a-z0-9._-]*$"
+},
+"name": {
+"type": "string",
+"description": "Human-readable layer name.",
+"minLength": 1
+},
+"version": {
+"type": "string",
+"description": "Layer version.",
+"minLength": 1,
+"pattern": "^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z0-9.-]+)?$"
+},
+"description": {
+"type": "string",
+"description": "Short description of the layer.",
+"minLength": 1
+},
+"purpose": {
+"type": "string",
+"description": "Purpose of the Self-Dialogue Loop.",
+"minLength": 1
+},
+"position": {
+"type": "object",
+"description": "Position of this layer within the reasoning engine.",
+"additionalProperties": false,
+"required": [
+"previous_layer",
+"current_layer",
+"next_layer"
+],
+"properties": {
+"previous_layer": {
+"type": "string",
+"description": "Layer that runs before this layer.",
+"minLength": 1
+},
+"current_layer": {
+"type": "string",
+"description": "Current layer identifier.",
+"minLength": 1
+},
+"next_layer": {
+"type": "string",
+"description": "Layer that runs after this layer.",
+"minLength": 1
+}
+}
+},
+"self_dialogue_modes": {
+"type": "array",
+"description": "Supported modes of structured self-dialogue.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"hypothesis_generation",
+"hypothesis_testing",
+"alternative_comparison",
+"contradiction_probe",
+"assumption_review",
+"branch_selection",
+"summary_preparation"
+]
+},
+"uniqueItems": true
+},
+"responsibilities": {
+"type": "array",
+"description": "Responsibilities of the Self-Dialogue Loop.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"generate_candidate_hypotheses",
+"test_hypotheses",
+"compare_alternative_interpretations",
+"probe_for_contradictions",
+"review_remaining_assumptions",
+"select_useful_reasoning_branches",
+"prepare_traceable_summary"
+]
+},
+"uniqueItems": true
+},
+"input_contract": {
+"type": "object",
+"description": "Input required by the Self-Dialogue Loop.",
+"additionalProperties": false,
+"required": [
+"required_inputs"
+],
+"properties": {
+"required_inputs": {
+"type": "array",
+"description": "Required input fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"initial_question",
+"decomposed_questions",
+"counter_questions",
+"premise_findings",
+"definition_findings",
+"scope_findings",
+"risk_findings"
+]
+},
+"uniqueItems": true
+},
+"optional_inputs": {
+"type": "array",
+"description": "Optional input fields.",
+"minItems": 0,
+"items": {
+"type": "string",
+"enum": [
+"user_intent",
+"prior_trace",
+"known_constraints",
+"source_context",
+"evidence_context",
+"risk_context",
+"previous_decision"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"output_contract": {
+"type": "object",
+"description": "Output produced by the Self-Dialogue Loop.",
+"additionalProperties": false,
+"required": [
+"required_outputs"
+],
+"properties": {
+"required_outputs": {
+"type": "array",
+"description": "Required output fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"self_dialogue_trace",
+"candidate_hypotheses",
+"tested_hypotheses",
+"contradiction_findings",
+"selected_branches",
+"summary_for_verification",
+"decision"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"dialogue_turns": {
+"type": "array",
+"description": "Example or configured self-dialogue turns produced by this layer.",
+"minItems": 1,
+"items": {
+"$ref": "#/$defs/dialogue_turn"
+}
+},
+"decision_policy": {
+"type": "object",
+"description": "Policy for deciding what happens after the self-dialogue loop runs.",
+"additionalProperties": false,
+"required": [
+"allowed_decisions",
+"default_decision"
+],
+"properties": {
+"allowed_decisions": {
+"type": "array",
+"description": "Allowed decisions after this layer runs.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"continue_to_expansion",
+"hold_for_verification",
+"request_human_review",
+"return_to_counter_question"
+]
+},
+"uniqueItems": true
+},
+"default_decision": {
+"type": "string",
+"description": "Default decision when no blocking issue is found.",
+"enum": [
+"continue_to_expansion",
+"hold_for_verification",
+"request_human_review",
+"return_to_counter_question"
+]
+}
+}
+},
+"safety_controls": {
+"type": "object",
+"description": "Controls that prevent self-dialogue from becoming self-hypnosis, infinite branching, or unsupported speculation.",
+"additionalProperties": false,
+"required": [
+"max_dialogue_turns",
+"prevent_self_hypnosis",
+"contradiction_probe_required",
+"allow_return_to_counter_question",
+"human_review_gate"
+],
+"properties": {
+"max_dialogue_turns": {
+"type": "integer",
+"description": "Maximum number of self-dialogue turns in one cycle.",
+"minimum": 1
+},
+"prevent_self_hypnosis": {
+"type": "boolean",
+"description": "Whether the layer must prevent internally generated assumptions from being treated as confirmed facts."
+},
+"contradiction_probe_required": {
+"type": "boolean",
+"description": "Whether at least one contradiction probe is required before continuing."
+},
+"allow_return_to_counter_question": {
+"type": "boolean",
+"description": "Whether the layer may return to the Counter-Question Layer when assumptions remain unstable."
+},
+"human_review_gate": {
+"type": "boolean",
+"description": "Whether human review may be requested for unresolved, high-risk, or ambiguous reasoning."
+}
+}
+}
+},
+"$defs": {
+"dialogue_turn": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"prompt_question",
+"internal_answer",
+"mode",
+"hypothesis",
+"confidence",
+"contradiction_found",
+"next_action"
+],
+"properties": {
+"prompt_question": {
+"type": "string",
+"description": "The internal question asked during the self-dialogue turn.",
+"minLength": 1
+},
+"internal_answer": {
+"type": "string",
+"description": "The internal answer generated for the prompt question.",
+"minLength": 1
+},
+"mode": {
+"type": "string",
+"description": "Self-dialogue mode used in this turn.",
+"enum": [
+"hypothesis_generation",
+"hypothesis_testing",
+"alternative_comparison",
+"contradiction_probe",
+"assumption_review",
+"branch_selection",
+"summary_preparation"
+]
+},
+"hypothesis": {
+"type": "string",
+"description": "Hypothesis being generated, tested, compared, or summarized.",
+"minLength": 1
+},
+"confidence": {
+"type": "string",
+"description": "Confidence level for this dialogue turn.",
+"enum": [
+"low",
+"medium",
+"high"
+]
+},
+"contradiction_found": {
+"type": "boolean",
+"description": "Whether a contradiction was found in this turn."
+},
+"next_action": {
+"type": "string",
+"description": "Recommended next action after this dialogue turn.",
+"enum": [
+"continue_dialogue",
+"compare_alternative",
+"probe_contradiction",
+"prepare_summary",
+"return_to_counter_question",
+"request_human_review"
+]
+}
+}
+}
+}
+}
