@@ -4,9 +4,13 @@ Validate example YAML files against their JSON Schemas.
 
 This script currently validates:
 
-* Question-Ignition Autonomous Engine configuration
+* v0.1 Question-Ignition Autonomous Engine Configuration
   schema : schemas/question-ignition-engine-config.schema.json
   example: examples/question-ignition-autonomous-engine.example.yaml
+
+* v0.2 Counter-Question Layer
+  schema : schemas/counter-question-layer.schema.json
+  example: examples/counter-question-layer.example.yaml
 """
 
 from pathlib import Path
@@ -20,10 +24,15 @@ ROOT = Path(__file__).resolve().parents[1]
 
 VALIDATION_TARGETS = [
     {
-        "name": "Question-Ignition Autonomous Engine Configuration",
+        "name": "v0.1 Question-Ignition Autonomous Engine Configuration",
         "schema": ROOT / "schemas" / "question-ignition-engine-config.schema.json",
         "example": ROOT / "examples" / "question-ignition-autonomous-engine.example.yaml",
-    }
+    },
+    {
+        "name": "v0.2 Counter-Question Layer",
+        "schema": ROOT / "schemas" / "counter-question-layer.schema.json",
+        "example": ROOT / "examples" / "counter-question-layer.example.yaml",
+    },
 ]
 
 
@@ -34,7 +43,20 @@ def load_json(path: Path) -> dict:
 
 def load_yaml(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as file:
-        return yaml.safe_load(file)
+        data = yaml.safe_load(file)
+
+    if data is None:
+        raise ValueError(f"YAML file is empty: {path}")
+
+    if not isinstance(data, dict):
+        raise TypeError(f"YAML root must be an object: {path}")
+
+    return data
+
+
+def format_error_path(error) -> str:
+    path = ".".join(str(part) for part in error.path)
+    return path if path else "<root>"
 
 
 def validate_target(name: str, schema_path: Path, example_path: Path) -> bool:
@@ -50,17 +72,24 @@ def validate_target(name: str, schema_path: Path, example_path: Path) -> bool:
         print(f"[error] Example file not found: {example_path}", file=sys.stderr)
         return False
 
-    schema = load_json(schema_path)
-    example = load_yaml(example_path)
+    try:
+        schema = load_json(schema_path)
+        example = load_yaml(example_path)
+    except Exception as exc:
+        print(f"[error] Failed to load validation target: {name}", file=sys.stderr)
+        print(f"  - {exc}", file=sys.stderr)
+        return False
 
     validator = Draft202012Validator(schema)
-    errors = sorted(validator.iter_errors(example), key=lambda error: list(error.path))
+    errors = sorted(
+        validator.iter_errors(example),
+        key=lambda error: list(error.path),
+    )
 
     if errors:
         print(f"[error] {name} validation failed", file=sys.stderr)
         for error in errors:
-            path = ".".join(str(part) for part in error.path) or "<root>"
-            print(f"  - path: {path}", file=sys.stderr)
+            print(f"  - path: {format_error_path(error)}", file=sys.stderr)
             print(f"    message: {error.message}", file=sys.stderr)
         return False
 
@@ -88,3 +117,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
