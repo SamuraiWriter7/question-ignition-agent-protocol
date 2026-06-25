@@ -1,0 +1,139 @@
+engine_id: question-ignition-autonomous-engine-v0.1
+name: Question-Ignition Autonomous Engine
+description: >
+  A controlled reasoning engine that treats a question as an ignition device
+  and safely circulates reasoning through counter-questioning, self-dialogue,
+  derived questions, verification, compression, and stop or re-ignition conditions.
+
+cycle:
+  phases:
+    - question
+    - counter_question
+    - self_dialogue
+    - derived_questions
+    - verification
+    - conclude_or_reignite
+
+layers:
+  - id: ignition
+    name: Ignition Layer
+    role: Receives the initial question.
+
+  - id: decomposition
+    name: Decomposition Layer
+    role: Decomposes the question into smaller reasoning units.
+
+  - id: counter_question
+    name: Counter-Question Layer
+    role: Generates counter-questions and destabilizes hidden premises.
+
+  - id: self_dialogue
+    name: Self-Dialogue Layer
+    role: Develops hypotheses through structured internal question-and-answer cycles.
+
+  - id: expansion
+    name: Expansion Layer
+    role: Generates derived questions from the initial inquiry.
+
+  - id: verification
+    name: Verification Layer
+    role: Checks evidence, contradictions, and reasoning leaps.
+
+  - id: compression
+    name: Compression Layer
+    role: Compresses excessive question branches back into usable structure.
+
+  - id: stop_or_reignite
+    name: Stop / Re-Ignition Gate
+    role: Determines whether to stop, hold, request review, or re-ignite the reasoning cycle.
+
+control:
+  max_depth: 5
+  max_questions_per_cycle: 7
+  evidence_required: true
+  contradiction_check: true
+  human_review_gate: true
+  cost_budget: fixed
+  stop_when:
+    - conclusion_reached
+    - contradiction_detected
+    - evidence_missing
+    - loop_repeated
+    - scope_exceeded
+
+semantics:
+  counter_question:
+    description: Questions the premises of an externally provided inquiry.
+    examples:
+      - "What assumptions does this question rely on?"
+      - "Is this definition valid?"
+      - "How would this look from another perspective?"
+
+  self_dialogue:
+    description: Develops hypotheses through internal reasoning.
+    examples:
+      - "What happens if hypothesis A is true?"
+      - "Does case B cause the structure to fail?"
+      - "Can this be connected to C?"
+
+roles:
+  - name: counter_question
+    function: Destabilizes premises.
+
+  - name: self_dialogue
+    function: Expands reasoning internally.
+
+  - name: verification
+    function: Prevents runaway reasoning.
+
+  - name: compression
+    function: Returns expanded reasoning to usable structure.
+
+multi_model_design:
+  small_model:
+    responsibilities:
+      - question_decomposition
+      - derived_question_generation
+      - counter_questioning
+      - loop_detection
+      - compression
+
+  medium_model:
+    responsibilities:
+      - hypothesis_organization
+      - contradiction_checking
+      - structural_formatting
+
+  large_model:
+    responsibilities:
+      - high_complexity_integration
+      - final_judgment
+      - activation_only_for_critical_reasoning
+
+output_contract:
+  required_outputs:
+    - initial_question
+    - decomposed_questions
+    - counter_questions
+    - self_dialogue_trace
+    - derived_questions
+    - verification_result
+    - compression_summary
+    - decision
+
+  decision_status:
+    - conclude
+    - hold
+    - reignite
+    - human_review_required
+
+trace_required: true
+
+naming:
+  primary_name: Question-Ignition Autonomous Engine
+  english_name: Question-Ignition Autonomous Engine
+  aliases:
+    - Question Engine Protocol
+    - Autonomous Inquiry Engine
+    - Reasoning Combustion Engine
+    - Kazene Question Ignition OS
