@@ -10,133 +10,242 @@ A controlled reasoning engine that treats a question as an ignition device, not 
 
 ## Concept
 
-通常のエージェントは、タスクを起点に動きます。
+Conventional agents usually start from a task.
 
 ```text
 Goal → Plan → Execute → Complete
 ```
 
-問い発火型自律推論エンジンは、問いを起点に動きます。
+The Question-Ignition Autonomous Engine starts from a question.
 
 ```text
 Question → Counter-Question → Self-Dialogue → Derived Questions → Verification → Conclude or Re-Ignite
 ```
 
-このエンジンの目的は、AIを「勝手に考え続ける存在」にすることではありません。
+The purpose of this engine is not to create an agent that thinks endlessly.
 
-目的は、問いを発火点として推論を起動し、検証・圧縮・停止条件によって暴走を防ぎながら、必要に応じて再発火できる制御付き推論サイクルを定義することです。
+The purpose is to define a controlled reasoning cycle that starts from a question, tests its premises, develops hypotheses, verifies reasoning, compresses the result, and decides whether to stop, hold, request human review, or re-ignite.
 
 ---
 
 ## Core Idea
 
 ```text
-問い = 点火プラグ
-反問 = 前提の圧縮
-自問自答 = 仮説の燃焼
-派生問い = 推論の展開
-検証 = 調速機
-圧縮 = 冷却・要約
-停止条件 = ブレーキ
-再発火 = 次サイクル
+Question = ignition plug
+Counter-question = premise compression
+Self-dialogue = hypothesis combustion
+Derived questions = reasoning expansion
+Verification = governor
+Compression = cooling and summarization
+Stop conditions = brake
+Re-ignition = next cycle
 ```
 
-問いは燃料ではありません。
-問いは、眠っている推論系に火花を飛ばす点火装置です。
+A question is not fuel.
+
+A question is an ignition event that activates a reasoning system.
 
 ---
 
 ## Reasoning Cycle
 
 ```text
-問い
+Question
   ↓
-反問
+Counter-Question
   ↓
-自問自答
+Self-Dialogue
   ↓
-派生問い
+Derived Questions
   ↓
-検証
+Verification
   ↓
-収束または再発火
+Conclude or Re-Ignite
 ```
 
-この循環により、問いは単なる入力ではなく、推論を起動する構造的イベントとして扱われます。
+This cycle treats a question not as a simple input, but as a structural event that starts controlled inquiry.
 
 ---
 
-## Layers
+## Engine Layers
 
 ### 1. Ignition Layer
 
-最初の問いを受け取る層です。
+Receives the initial question.
 
-問いの内容、発火文脈、目的、スコープを記録します。
+This layer records the question, ignition context, purpose, and reasoning scope.
 
 ### 2. Decomposition Layer
 
-問いを分解する層です。
+Decomposes the question into smaller reasoning units.
 
-複雑な問いを、扱いやすい小さな問いへ分割します。
+This prevents the engine from trying to solve an oversized question in one uncontrolled step.
 
 ### 3. Counter-Question Layer
 
-反問を生成する層です。
+Generates structured counter-questions before deeper self-dialogue begins.
 
-問いの前提、定義、視点、隠れた条件を揺らします。
+This layer tests hidden assumptions, definitions, scope, evidence conditions, reasoning risks, and human intent.
 
-例：
+Examples:
 
 ```text
-それは何を前提にしているのか？
-その定義は妥当か？
-別の角度ではどう見えるか？
+What hidden assumption does this question rely on?
+Are the key terms clearly defined?
+Is the reasoning scope narrow enough for one cycle?
+What evidence would be required to answer this safely?
+How would this look from another perspective?
+What risk appears if this question is answered too quickly?
+Is the user's intent clear enough to continue?
 ```
 
 ### 4. Self-Dialogue Layer
 
-自問自答によって仮説を育てる層です。
+Develops hypotheses through structured internal question-and-answer cycles.
 
-内部対話を通じて、可能性・反例・接続先を探索します。
-
-例：
+Examples:
 
 ```text
-仮にAならどうなる？
-Bの場合は破綻するか？
-Cと接続できるか？
+What happens if hypothesis A is true?
+Does case B cause the structure to fail?
+Can this be connected to C?
 ```
 
 ### 5. Expansion Layer
 
-派生問いを生成する層です。
+Generates derived questions from the initial inquiry.
 
-最初の問いから生じた追加の問い、深掘りの方向、次の調査対象を整理します。
+This layer identifies deeper branches, follow-up questions, and possible next-cycle ignition points.
 
 ### 6. Verification Layer
 
-根拠・矛盾・飛躍を検査する層です。
+Checks evidence, contradictions, and reasoning leaps.
 
-問いの展開が物語化・自己正当化・無限ループに陥っていないかを確認します。
+This layer prevents narrative drift, overconfidence, unsupported conclusions, and repeated loops.
 
 ### 7. Compression Layer
 
-増えすぎた問いを圧縮する層です。
+Compresses excessive question branches back into usable structure.
 
-推論の枝を整理し、実用可能な構造へ戻します。
+This layer turns expanded reasoning into a summary, decision, or refined question.
 
 ### 8. Stop / Re-Ignition Gate
 
-停止・保留・再発火を判定する層です。
+Determines whether the engine should stop, hold, request human review, or re-ignite the reasoning cycle.
 
-エンジンが止まるべきか、保留すべきか、人間確認を求めるべきか、次の問いとして再発火すべきかを決定します。
+---
+
+## v0.1 — Engine Configuration
+
+v0.1 defines the minimum viable configuration of the Question-Ignition Autonomous Engine.
+
+It includes:
+
+* reasoning cycle
+* engine layers
+* control policy
+* semantics
+* multi-model responsibilities
+* output contract
+* naming metadata
+
+### v0.1 Files
+
+```text
+schemas/question-ignition-engine-config.schema.json
+examples/question-ignition-autonomous-engine.example.yaml
+```
+
+---
+
+## v0.2 — Counter-Question Layer
+
+v0.2 defines the **Counter-Question Layer** as an independent reasoning layer.
+
+A counter-question is not a rejection of the original question.
+
+It is a controlled reasoning operation that tests whether the engine should proceed, hold, ask for human review, or re-ignite with a refined question.
+
+### Counter-Question Types
+
+```text
+premise_check
+definition_check
+scope_check
+evidence_check
+perspective_shift
+risk_check
+human_intent_check
+```
+
+### Responsibilities
+
+The Counter-Question Layer is responsible for:
+
+* identifying hidden assumptions
+* checking whether key terms are defined
+* detecting scope ambiguity
+* requesting missing evidence
+* generating alternative viewpoints
+* detecting reasoning risks
+* determining whether human review is needed
+
+### Position in the Engine
+
+```text
+Question
+  ↓
+Decomposition
+  ↓
+Counter-Question Layer
+  ↓
+Self-Dialogue
+  ↓
+Derived Questions
+  ↓
+Verification
+  ↓
+Compression
+  ↓
+Stop / Re-Ignition
+```
+
+The layer sits before self-dialogue because the engine should not begin developing internal hypotheses before testing the premise of the initial question.
+
+### Counter-Question Output
+
+Each counter-question should include:
+
+* question
+* type
+* target
+* purpose
+* priority
+* requires_human_review
+
+### Layer Decision
+
+After generating counter-questions, the layer may decide:
+
+```text
+continue
+hold
+request_human_review
+reignite_with_refined_question
+```
+
+### v0.2 Files
+
+```text
+schemas/counter-question-layer.schema.json
+examples/counter-question-layer.example.yaml
+```
 
 ---
 
 ## Control Policy
 
-問い発火型エンジンは、自律性と停止条件をセットで扱います。
+The engine treats autonomy and stopping conditions as one design unit.
 
 ```yaml
 control:
@@ -154,17 +263,17 @@ control:
     - scope_exceeded
 ```
 
-自律型エージェントにおいて重要なのは、無限に動くことではありません。
+The important point is not that an autonomous agent can move forever.
 
-**止まれること**です。
+The important point is that it can stop.
 
-止まれないエージェントは、自律ではなく暴走です。
+An agent that cannot stop is not autonomous. It is runaway reasoning.
 
 ---
 
 ## Output Contract
 
-各推論サイクルは、最低限以下の出力を持つべきです。
+Each reasoning cycle should produce a trace.
 
 ```yaml
 output_contract:
@@ -187,187 +296,45 @@ output_contract:
   trace_required: true
 ```
 
-これにより、エンジンがどの問いを受け取り、どのように反問し、自問自答し、検証し、圧縮し、停止または再発火したかを追跡できます。
-
----
-
-## Example Configuration
-
-```yaml
-engine_id: question-ignition-autonomous-engine-v0.1
-name: 問い発火型自律推論エンジン
-description: >
-  問いを発火装置とし、反問・自問自答・派生問い・検証・圧縮・停止条件によって
-  推論を安全に循環させる制御付き推論エンジン。
-
-cycle:
-  phases:
-    - 問い
-    - 反問
-    - 自問自答
-    - 派生問い
-    - 検証
-    - 収束または再発火
-
-layers:
-  - id: ignition
-    name: Ignition Layer
-    role: 最初の問いを受け取る
-
-  - id: decomposition
-    name: Decomposition Layer
-    role: 問いを分解する
-
-  - id: counter_question
-    name: Counter-Question Layer
-    role: 反問を生成し、前提を揺らす
-
-  - id: self_dialogue
-    name: Self-Dialogue Layer
-    role: 自問自答で仮説を育てる
-
-  - id: expansion
-    name: Expansion Layer
-    role: 派生問いを生成する
-
-  - id: verification
-    name: Verification Layer
-    role: 根拠・矛盾・飛躍を検査する
-
-  - id: compression
-    name: Compression Layer
-    role: 増えすぎた問いを圧縮し、使える構造に戻す
-
-  - id: stop_or_reignite
-    name: Stop / Re-Ignition Gate
-    role: 停止・保留・再発火を判定する
-
-control:
-  max_depth: 5
-  max_questions_per_cycle: 7
-  evidence_required: true
-  contradiction_check: true
-  human_review_gate: true
-  cost_budget: fixed
-  stop_when:
-    - conclusion_reached
-    - contradiction_detected
-    - evidence_missing
-    - loop_repeated
-    - scope_exceeded
-
-semantics:
-  counter_question:
-    description: 外部から来た問いの前提を問い返す
-    examples:
-      - "それは何を前提にしているのか？"
-      - "その定義は妥当か？"
-      - "別の角度ではどう見えるか？"
-
-  self_dialogue:
-    description: 内部で仮説を育てる
-    examples:
-      - "仮にAならどうなる？"
-      - "Bの場合は破綻するか？"
-      - "Cと接続できるか？"
-
-  roles:
-    - name: 反問
-      function: 前提を揺らす
-    - name: 自問自答
-      function: 内部で展開する
-    - name: 検証
-      function: 暴走を止める
-    - name: 圧縮
-      function: 使える構造に戻す
-
-multi_model_design:
-  small_model:
-    responsibilities:
-      - 問いの分解
-      - 派生問い生成
-      - 反問
-      - ループ検知
-      - 圧縮
-
-  medium_model:
-    responsibilities:
-      - 仮説整理
-      - 矛盾検査
-      - 構造化
-
-  large_model:
-    responsibilities:
-      - 高難度統合
-      - 最終判断
-      - 重要局面のみ起動
-
-output_contract:
-  required_outputs:
-    - initial_question
-    - decomposed_questions
-    - counter_questions
-    - self_dialogue_trace
-    - derived_questions
-    - verification_result
-    - compression_summary
-    - decision
-
-  decision_status:
-    - conclude
-    - hold
-    - reignite
-    - human_review_required
-
-  trace_required: true
-
-naming:
-  primary_name: 問い発火型自律推論エンジン
-  english_name: Question-Ignition Autonomous Engine
-  aliases:
-    - Question Engine Protocol
-    - Autonomous Inquiry Engine
-    - Reasoning Combustion Engine
-    - Kazene Question Ignition OS
-```
+This makes it possible to audit how the engine received a question, decomposed it, generated counter-questions, developed self-dialogue, verified reasoning, compressed the result, and made a decision.
 
 ---
 
 ## Multi-Model Design
 
-このエンジンは、巨大モデルを常時起動する設計ではありません。
+The engine does not require a large model to run continuously.
 
-小型・中型・大型モデルを役割分担させることで、省エネ型の推論リレー構造を実現します。
+It can distribute reasoning across small, medium, and large models.
 
 ### Small Model
 
 ```text
-問いの分解
-派生問い生成
-反問
-ループ検知
-圧縮
+question_decomposition
+derived_question_generation
+counter_questioning
+loop_detection
+compression
 ```
 
 ### Medium Model
 
 ```text
-仮説整理
-矛盾検査
-構造化
+hypothesis_organization
+contradiction_checking
+structural_formatting
 ```
 
 ### Large Model
 
 ```text
-高難度統合
-最終判断
-重要局面のみ起動
+high_complexity_integration
+final_judgment
+activation_only_for_critical_reasoning
 ```
 
-これは、空母と艦載機群のような構造です。
+This creates an energy-efficient reasoning relay.
 
-常に巨大な推論母艦を動かすのではなく、問いが発火したときだけ必要な翼を起動します。
+The small model handles lightweight branching and checks, the medium model organizes structure, and the large model is activated only when high-complexity integration is required.
 
 ---
 
@@ -377,18 +344,43 @@ naming:
 .
 ├── README.md
 ├── CHANGELOG.md
-├── configs/
-│   └── question-ignition-autonomous-engine.v0.1.yaml
 ├── schemas/
-│   └── question-ignition-engine-config.schema.json
+│   ├── question-ignition-engine-config.schema.json
+│   └── counter-question-layer.schema.json
 ├── examples/
-│   └── question-ignition-autonomous-engine.example.yaml
+│   ├── question-ignition-autonomous-engine.example.yaml
+│   └── counter-question-layer.example.yaml
 ├── scripts/
 │   └── validate_examples.py
 └── .github/
     └── workflows/
         └── validate.yml
 ```
+
+---
+
+## Validation
+
+Install dependencies:
+
+```bash
+pip install pyyaml jsonschema
+```
+
+Run validation:
+
+```bash
+python scripts/validate_examples.py
+```
+
+The validation script checks:
+
+```text
+v0.1 — Question-Ignition Autonomous Engine Configuration
+v0.2 — Counter-Question Layer
+```
+
+GitHub Actions also runs validation on push, pull request, and manual workflow dispatch.
 
 ---
 
@@ -412,7 +404,10 @@ Define counter-question generation as an independent layer.
 * premise checking
 * definition testing
 * hidden assumption detection
-* alternative viewpoint generation
+* scope checks
+* evidence checks
+* risk checks
+* human intent checks
 
 ### v0.3 — Self-Dialogue Loop
 
@@ -422,16 +417,18 @@ Define structured self-dialogue.
 * hypothesis growth
 * contradiction discovery
 * branch control
+* traceable self-dialogue records
 
 ### v0.4 — Verification Governor
 
-Define the verification and anti-runaway governor.
+Define verification and anti-runaway controls.
 
 * contradiction checks
 * evidence requirements
 * scope checks
 * loop detection
 * hallucination risk control
+* unsupported inference detection
 
 ### v0.5 — Re-Ignition Policy
 
@@ -447,7 +444,7 @@ Define when the engine should stop, hold, request human review, or re-ignite.
 
 ## Position in the Larger Architecture
 
-Question-Ignition Autonomous Engine can act as the starter system for a broader reasoning architecture.
+The Question-Ignition Autonomous Engine can act as the starter system for a broader reasoning architecture.
 
 ```text
 Question-Ignition Autonomous Engine
@@ -473,6 +470,7 @@ The engine starts the reasoning cycle, the rumination layer digests errors, memo
 
 ```text
 A question should ignite reasoning.
+A premise should be tested before acceleration.
 Reasoning should circulate.
 Circulation should be verified.
 Verification should compress.
@@ -481,6 +479,7 @@ The engine should stop, hold, or re-ignite.
 ```
 
 問いは推論を起動する。
+前提は加速前に検査される。
 推論は循環する。
 循環は検証される。
 検証は圧縮される。
@@ -497,6 +496,6 @@ TBD.
 
 ## Status
 
-This project is currently at **v0.1-candidate**.
+This project is currently at **v0.2.0-candidate**.
 
-The first milestone defines the engine configuration for a controlled, question-driven autonomous reasoning system.
+The current milestone defines the Counter-Question Layer as an independent reasoning layer for testing assumptions, definitions, scope, evidence, risks, and human intent before deeper self-dialogue begins.
