@@ -556,6 +556,51 @@ Define when the engine should stop, hold, request human review, return, or re-ig
 
 ---
 
+## Ignition Contract and Trace Boundary
+
+The Question-Ignition Autonomous Engine treats the `initial_question` as an ignition contract.
+
+An initial question is not just a user input.
+It is the origin point of a reasoning cycle.
+
+Each reasoning cycle should preserve:
+
+* the initial question that triggered the cycle
+* the layer sequence that transformed the question
+* the verification result that constrained the reasoning
+* the compression summary that stabilized the result
+* the final decision that concluded, held, returned, or re-ignited the cycle
+* the trace link that connects this cycle to previous or future cycles
+
+When the Re-Ignition Policy produces a `refined_question`, that refined question may become the next cycle's `initial_question`.
+
+```text
+initial_question
+  ↓
+reasoning cycle
+  ↓
+compression_summary
+  ↓
+re_ignition_decision
+  ↓
+refined_question
+  ↓
+next initial_question
+```
+
+This creates a traceable ignition chain.
+
+The engine should not re-ignite from raw speculation.
+Only verified, compressed, and trace-linked reasoning may become the next ignition point.
+
+In this sense, the protocol defines both:
+
+* the first valve of reasoning: ignition
+* the final valve of reasoning: controlled re-ignition
+
+A reasoning cycle becomes autonomous only when its origin, transformation, verification, compression, and re-ignition boundary remain traceable.
+
+
 ## Position in the Larger Architecture
 
 The Question-Ignition Autonomous Engine can act as the starter system for a broader reasoning architecture.
