@@ -446,3 +446,6 @@ The engine should stop, hold, or re-ignite.
 * Stability: experimental
 * Scope: initial engine configuration
 * Validation: JSON Schema + YAML example validation
+
+* Clarified the ignition contract and trace boundary in `README.md`, defining `initial_question` as the origin point of a reasoning cycle and `refined_question` as a possible next-cycle ignition point through trace-linked re-ignition.
+
