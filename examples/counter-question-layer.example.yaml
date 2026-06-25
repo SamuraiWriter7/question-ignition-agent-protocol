@@ -1,0 +1,135 @@
+layer_id: counter-question-layer
+name: Counter-Question Layer
+version: v0.2.0-candidate
+
+description: >
+  A reasoning layer that generates structured counter-questions before deeper
+  self-dialogue begins, in order to test assumptions, definitions, scope,
+  evidence, risks, and human intent.
+
+purpose: >
+  To prevent premature conclusions by destabilizing hidden premises and
+  clarifying the reasoning conditions of the initial question.
+
+position:
+  previous_layer: decomposition
+  current_layer: counter_question
+  next_layer: self_dialogue
+
+counter_question_types:
+  - premise_check
+  - definition_check
+  - scope_check
+  - evidence_check
+  - perspective_shift
+  - risk_check
+  - human_intent_check
+
+responsibilities:
+  - identify_hidden_assumptions
+  - check_key_term_definitions
+  - detect_scope_ambiguity
+  - request_missing_evidence
+  - generate_alternative_perspectives
+  - detect_reasoning_risks
+  - determine_human_review_need
+
+input_contract:
+  required_inputs:
+    - initial_question
+    - decomposed_questions
+    - ignition_context
+    - scope
+  optional_inputs:
+    - user_intent
+    - prior_trace
+    - known_constraints
+    - source_context
+    - risk_context
+
+output_contract:
+  required_outputs:
+    - counter_questions
+    - premise_findings
+    - definition_findings
+    - scope_findings
+    - risk_findings
+    - decision
+
+counter_questions:
+  - question: "What hidden assumption does the initial question rely on?"
+    type: premise_check
+    target: initial_question
+    purpose: >
+      To identify whether the question depends on an unstated premise before
+      deeper reasoning begins.
+    priority: high
+    requires_human_review: false
+
+  - question: "Are the key terms in the question clearly defined?"
+    type: definition_check
+    target: key_terms
+    purpose: >
+      To prevent the engine from reasoning with unstable or ambiguous
+      definitions.
+    priority: high
+    requires_human_review: false
+
+  - question: "Is the reasoning scope narrow enough for one cycle?"
+    type: scope_check
+    target: scope
+    purpose: >
+      To detect whether the question should be decomposed further before
+      continuing.
+    priority: medium
+    requires_human_review: false
+
+  - question: "What evidence would be required to answer this safely?"
+    type: evidence_check
+    target: evidence_conditions
+    purpose: >
+      To identify whether the engine can proceed with available evidence or
+      should hold the cycle.
+    priority: high
+    requires_human_review: false
+
+  - question: "How would this question look from an opposing perspective?"
+    type: perspective_shift
+    target: reasoning_perspective
+    purpose: >
+      To avoid single-perspective reasoning and expose alternative
+      interpretations.
+    priority: medium
+    requires_human_review: false
+
+  - question: "What reasoning risk appears if this question is answered too quickly?"
+    type: risk_check
+    target: premature_conclusion
+    purpose: >
+      To detect hallucination, overconfidence, or narrative drift before
+      self-dialogue expands the reasoning.
+    priority: critical
+    requires_human_review: false
+
+  - question: "Is the user's intent clear enough to continue without clarification?"
+    type: human_intent_check
+    target: user_intent
+    purpose: >
+      To determine whether the engine should continue with best-effort
+      reasoning or request human review.
+    priority: medium
+    requires_human_review: false
+
+decision_policy:
+  allowed_decisions:
+    - continue
+    - hold
+    - request_human_review
+    - reignite_with_refined_question
+  default_decision: continue
+
+safety_controls:
+  max_counter_questions: 7
+  avoid_infinite_clarification: true
+  allow_best_effort_reasoning: true
+  human_review_gate: true
