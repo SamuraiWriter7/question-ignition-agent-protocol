@@ -123,17 +123,29 @@ Generates derived questions from the initial inquiry.
 
 This layer identifies deeper branches, follow-up questions, and possible next-cycle ignition points.
 
-### 6. Verification Layer
+### 6. Verification Governor
 
-Checks evidence, contradictions, and reasoning leaps.
+Verifies hypotheses, checks evidence, detects contradictions, identifies unsupported inference, and prevents self-dialogue from becoming overconfident conclusion.
 
-This layer prevents narrative drift, overconfidence, unsupported conclusions, and repeated loops.
+The Verification Governor is not a simple fact-checking layer.
+
+It is a reasoning control mechanism that asks:
+
+```text
+Is this hypothesis supported?
+What evidence is missing?
+Does this contradict another branch?
+Is the reasoning scope still valid?
+Has the loop repeated itself?
+Is the engine becoming overconfident?
+Should the cycle continue, hold, compress, return, or request human review?
+```
 
 ### 7. Compression Layer
 
 Compresses excessive question branches back into usable structure.
 
-This layer turns expanded reasoning into a summary, decision, or refined question.
+This layer turns expanded and verified reasoning into a summary, decision, or refined question.
 
 ### 8. Stop / Re-Ignition Gate
 
@@ -209,7 +221,7 @@ Self-Dialogue Loop
   ↓
 Derived Questions
   ↓
-Verification
+Verification Governor
   ↓
 Compression
   ↓
@@ -293,7 +305,7 @@ Self-Dialogue Loop
   ↓
 Expansion
   ↓
-Verification
+Verification Governor
   ↓
 Compression
   ↓
@@ -332,6 +344,97 @@ return_to_counter_question
 ```text
 schemas/self-dialogue-loop.schema.json
 examples/self-dialogue-loop.example.yaml
+```
+
+---
+
+## v0.4 — Verification Governor
+
+v0.4 defines the **Verification Governor** as an independent control layer.
+
+The Verification Governor checks whether hypotheses generated through self-dialogue and expansion are supported, internally consistent, scoped correctly, and safe to compress into a usable result.
+
+A hypothesis should not become a conclusion before verification.
+
+### Verification Types
+
+```text
+evidence_check
+contradiction_check
+scope_check
+unsupported_inference_check
+loop_check
+confidence_check
+human_review_check
+```
+
+### Responsibilities
+
+The Verification Governor is responsible for:
+
+* checking whether hypotheses are supported by evidence
+* detecting contradictions between reasoning branches
+* detecting unsupported inference
+* checking whether the reasoning scope has been exceeded
+* detecting repeated loops
+* reducing overconfidence
+* determining whether human review is required
+* preparing verified material for compression
+
+### Position in the Engine
+
+```text
+Question
+  ↓
+Decomposition
+  ↓
+Counter-Question Layer
+  ↓
+Self-Dialogue Loop
+  ↓
+Expansion
+  ↓
+Verification Governor
+  ↓
+Compression
+  ↓
+Stop / Re-Ignition
+```
+
+The Verification Governor sits after self-dialogue and expansion.
+
+This is important because hypotheses should not be treated as conclusions until they pass through verification.
+
+### Verification Output
+
+Each verification finding should include:
+
+* finding
+* type
+* target
+* severity
+* evidence_status
+* contradiction_detected
+* recommended_action
+
+### Layer Decision
+
+After running the Verification Governor, the layer may decide:
+
+```text
+continue_to_compression
+hold_for_evidence
+return_to_self_dialogue
+return_to_counter_question
+request_human_review
+stop_cycle
+```
+
+### v0.4 Files
+
+```text
+schemas/verification-governor.schema.json
+examples/verification-governor.example.yaml
 ```
 
 ---
@@ -440,11 +543,13 @@ The small model handles lightweight branching and checks, the medium model organ
 ├── schemas/
 │   ├── question-ignition-engine-config.schema.json
 │   ├── counter-question-layer.schema.json
-│   └── self-dialogue-loop.schema.json
+│   ├── self-dialogue-loop.schema.json
+│   └── verification-governor.schema.json
 ├── examples/
 │   ├── question-ignition-autonomous-engine.example.yaml
 │   ├── counter-question-layer.example.yaml
-│   └── self-dialogue-loop.example.yaml
+│   ├── self-dialogue-loop.example.yaml
+│   └── verification-governor.example.yaml
 ├── scripts/
 │   └── validate_examples.py
 └── .github/
@@ -474,6 +579,7 @@ The validation script checks:
 v0.1 — Question-Ignition Autonomous Engine Configuration
 v0.2 — Counter-Question Layer
 v0.3 — Self-Dialogue Loop
+v0.4 — Verification Governor
 ```
 
 GitHub Actions also runs validation on push, pull request, and manual workflow dispatch.
@@ -520,12 +626,13 @@ Define structured self-dialogue.
 
 Define verification and anti-runaway controls.
 
+* evidence checks
 * contradiction checks
-* evidence requirements
 * scope checks
-* loop detection
-* hallucination risk control
 * unsupported inference detection
+* loop detection
+* confidence adjustment
+* human review checks
 
 ### v0.5 — Re-Ignition Policy
 
@@ -569,6 +676,7 @@ The engine starts the reasoning cycle, the rumination layer digests errors, memo
 A question should ignite reasoning.
 A premise should be tested before acceleration.
 Self-dialogue should grow hypotheses without becoming self-hypnosis.
+A hypothesis should not become a conclusion before verification.
 Reasoning should circulate.
 Circulation should be verified.
 Verification should compress.
@@ -579,6 +687,7 @@ The engine should stop, hold, or re-ignite.
 問いは推論を起動する。
 前提は加速前に検査される。
 自問自答は仮説を育てるが、自己催眠になってはならない。
+仮説は検証される前に結論になってはならない。
 推論は循環する。
 循環は検証される。
 検証は圧縮される。
@@ -595,6 +704,6 @@ TBD.
 
 ## Status
 
-This project is currently at **v0.3.0-candidate**.
+This project is currently at **v0.4.0-candidate**.
 
-The current milestone defines the Self-Dialogue Loop as an independent reasoning layer for generating, testing, comparing, and summarizing hypotheses after counter-questioning and before downstream expansion and verification.
+The current milestone defines the Verification Governor as an independent reasoning control layer for checking evidence, contradictions, unsupported inference, scope boundaries, loop repetition, confidence levels, and human review needs before compression and final decision.
