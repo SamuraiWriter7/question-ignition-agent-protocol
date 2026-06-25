@@ -6,6 +6,105 @@ This project follows a candidate-based versioning flow during early protocol dev
 
 ---
 
+## [v0.2.0-candidate] - 2026-06-25
+
+### Added
+
+* Added the **Counter-Question Layer** as an independent reasoning layer.
+* Added JSON Schema for the v0.2 layer:
+
+```text
+schemas/counter-question-layer.schema.json
+```
+
+* Added example YAML configuration for the v0.2 layer:
+
+```text
+examples/counter-question-layer.example.yaml
+```
+
+* Updated validation script to validate both v0.1 and v0.2 examples:
+
+```text
+scripts/validate_examples.py
+```
+
+* Updated `README.md` to describe:
+
+  * v0.2 Counter-Question Layer
+  * counter-question types
+  * layer responsibilities
+  * engine position
+  * output format
+  * decision policy
+  * updated repository structure
+  * updated roadmap
+
+### Counter-Question Types
+
+v0.2 introduces the following counter-question types:
+
+```text
+premise_check
+definition_check
+scope_check
+evidence_check
+perspective_shift
+risk_check
+human_intent_check
+```
+
+### Layer Responsibilities
+
+The Counter-Question Layer is responsible for:
+
+* identifying hidden assumptions
+* checking whether key terms are defined
+* detecting scope ambiguity
+* requesting missing evidence
+* generating alternative viewpoints
+* detecting reasoning risks
+* determining whether human review is needed
+
+### Output Structure
+
+Each counter-question may include:
+
+* question
+* type
+* target
+* purpose
+* priority
+* requires_human_review
+
+### Decision Policy
+
+After generating counter-questions, the layer may decide:
+
+```text
+continue
+hold
+request_human_review
+reignite_with_refined_question
+```
+
+### Purpose
+
+v0.2 prevents the engine from accelerating into self-dialogue before the premise of the question has been tested.
+
+A counter-question is not a rejection of the original question.
+
+It is the clutch between ignition and acceleration.
+
+### Status
+
+* Status: `v0.2.0-candidate`
+* Stability: experimental
+* Scope: Counter-Question Layer
+* Validation: JSON Schema + YAML example validation
+
+---
+
 ## [v0.1.0-candidate] - 2026-06-25
 
 ### Added
