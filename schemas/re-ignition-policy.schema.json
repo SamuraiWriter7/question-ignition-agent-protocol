@@ -1,0 +1,429 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://example.org/schemas/re-ignition-policy.schema.json",
+"title": "Re-Ignition Policy",
+"description": "Schema for defining the Re-Ignition Policy inside the Question-Ignition Autonomous Engine.",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"layer_id",
+"name",
+"version",
+"description",
+"purpose",
+"position",
+"decision_types",
+"responsibilities",
+"input_contract",
+"output_contract",
+"re_ignition_decisions",
+"decision_policy",
+"loop_controls",
+"safety_controls"
+],
+"properties": {
+"layer_id": {
+"type": "string",
+"description": "Machine-readable identifier for the layer.",
+"minLength": 1,
+"pattern": "^[a-z0-9][a-z0-9._-]*$"
+},
+"name": {
+"type": "string",
+"description": "Human-readable layer name.",
+"minLength": 1
+},
+"version": {
+"type": "string",
+"description": "Layer version.",
+"minLength": 1,
+"pattern": "^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z0-9.-]+)?$"
+},
+"description": {
+"type": "string",
+"description": "Short description of the layer.",
+"minLength": 1
+},
+"purpose": {
+"type": "string",
+"description": "Purpose of the Re-Ignition Policy.",
+"minLength": 1
+},
+"position": {
+"type": "object",
+"description": "Position of this layer within the reasoning engine.",
+"additionalProperties": false,
+"required": [
+"previous_layer",
+"current_layer",
+"next_layer"
+],
+"properties": {
+"previous_layer": {
+"type": "string",
+"description": "Layer that runs before this layer.",
+"minLength": 1
+},
+"current_layer": {
+"type": "string",
+"description": "Current layer identifier.",
+"minLength": 1
+},
+"next_layer": {
+"type": "string",
+"description": "Layer that runs after this layer or terminal state.",
+"minLength": 1
+}
+}
+},
+"decision_types": {
+"type": "array",
+"description": "Supported final or routing decisions.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"conclude",
+"hold",
+"request_human_review",
+"return_to_counter_question",
+"return_to_self_dialogue",
+"continue_to_compression",
+"reignite_with_refined_question",
+"stop_cycle"
+]
+},
+"uniqueItems": true
+},
+"responsibilities": {
+"type": "array",
+"description": "Responsibilities of the Re-Ignition Policy.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"determine_cycle_conclusion",
+"detect_missing_evidence",
+"detect_unresolved_contradictions",
+"route_to_previous_layer",
+"determine_human_review_need",
+"generate_refined_next_question",
+"prevent_endless_reignition",
+"preserve_cross_cycle_traceability"
+]
+},
+"uniqueItems": true
+},
+"input_contract": {
+"type": "object",
+"description": "Input required by the Re-Ignition Policy.",
+"additionalProperties": false,
+"required": [
+"required_inputs"
+],
+"properties": {
+"required_inputs": {
+"type": "array",
+"description": "Required input fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"initial_question",
+"compression_summary",
+"verification_findings",
+"evidence_findings",
+"contradiction_findings",
+"unsupported_inference_findings",
+"confidence_adjustments",
+"summary_for_compression",
+"previous_decision"
+]
+},
+"uniqueItems": true
+},
+"optional_inputs": {
+"type": "array",
+"description": "Optional input fields.",
+"minItems": 0,
+"items": {
+"type": "string",
+"enum": [
+"prior_trace",
+"cycle_history",
+"user_intent",
+"risk_context",
+"source_context",
+"known_constraints",
+"cost_context",
+"human_feedback"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"output_contract": {
+"type": "object",
+"description": "Output produced by the Re-Ignition Policy.",
+"additionalProperties": false,
+"required": [
+"required_outputs"
+],
+"properties": {
+"required_outputs": {
+"type": "array",
+"description": "Required output fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"decision",
+"reason",
+"source_layer",
+"next_layer",
+"refined_question",
+"requires_human_review",
+"cycle_status",
+"trace_link"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"re_ignition_decisions": {
+"type": "array",
+"description": "Example or configured re-ignition decisions produced by this layer.",
+"minItems": 1,
+"items": {
+"$ref": "#/$defs/re_ignition_decision"
+}
+},
+"decision_policy": {
+"type": "object",
+"description": "Policy for deciding whether to stop, hold, return, request review, or re-ignite.",
+"additionalProperties": false,
+"required": [
+"allowed_decisions",
+"default_decision",
+"terminal_decisions",
+"reignition_decisions"
+],
+"properties": {
+"allowed_decisions": {
+"type": "array",
+"description": "Allowed decisions after this layer runs.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"conclude",
+"hold",
+"request_human_review",
+"return_to_counter_question",
+"return_to_self_dialogue",
+"continue_to_compression",
+"reignite_with_refined_question",
+"stop_cycle"
+]
+},
+"uniqueItems": true
+},
+"default_decision": {
+"type": "string",
+"description": "Default decision when no blocking issue is found.",
+"enum": [
+"conclude",
+"hold",
+"request_human_review",
+"return_to_counter_question",
+"return_to_self_dialogue",
+"continue_to_compression",
+"reignite_with_refined_question",
+"stop_cycle"
+]
+},
+"terminal_decisions": {
+"type": "array",
+"description": "Decisions that end the current reasoning cycle.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"conclude",
+"hold",
+"request_human_review",
+"stop_cycle"
+]
+},
+"uniqueItems": true
+},
+"reignition_decisions": {
+"type": "array",
+"description": "Decisions that continue, route, or re-ignite reasoning.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"return_to_counter_question",
+"return_to_self_dialogue",
+"continue_to_compression",
+"reignite_with_refined_question"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"loop_controls": {
+"type": "object",
+"description": "Controls for preventing endless re-ignition loops.",
+"additionalProperties": false,
+"required": [
+"max_reignition_count",
+"require_refined_question",
+"require_trace_link",
+"detect_repeated_refinement",
+"stop_on_repeated_loop"
+],
+"properties": {
+"max_reignition_count": {
+"type": "integer",
+"description": "Maximum number of re-ignitions allowed for one reasoning chain.",
+"minimum": 1
+},
+"require_refined_question": {
+"type": "boolean",
+"description": "Whether re-ignition requires a refined next question."
+},
+"require_trace_link": {
+"type": "boolean",
+"description": "Whether each re-ignition must preserve a trace link to the previous cycle."
+},
+"detect_repeated_refinement": {
+"type": "boolean",
+"description": "Whether repeated or circular refinements must be detected."
+},
+"stop_on_repeated_loop": {
+"type": "boolean",
+"description": "Whether the engine must stop when repeated re-ignition loops are detected."
+}
+}
+},
+"safety_controls": {
+"type": "object",
+"description": "Controls that prevent uncontrolled continuation, unsafe re-ignition, or unreviewed escalation.",
+"additionalProperties": false,
+"required": [
+"allow_reignition_only_after_verification",
+"allow_reignition_only_after_compression",
+"human_review_gate",
+"cost_budget_check_required",
+"evidence_gap_check_required",
+"contradiction_check_required"
+],
+"properties": {
+"allow_reignition_only_after_verification": {
+"type": "boolean",
+"description": "Whether re-ignition is allowed only after verification has run."
+},
+"allow_reignition_only_after_compression": {
+"type": "boolean",
+"description": "Whether re-ignition is allowed only after reasoning has been compressed."
+},
+"human_review_gate": {
+"type": "boolean",
+"description": "Whether human review may be requested before re-ignition."
+},
+"cost_budget_check_required": {
+"type": "boolean",
+"description": "Whether remaining cost budget must be checked before re-ignition."
+},
+"evidence_gap_check_required": {
+"type": "boolean",
+"description": "Whether missing evidence must be checked before re-ignition."
+},
+"contradiction_check_required": {
+"type": "boolean",
+"description": "Whether unresolved contradictions must be checked before re-ignition."
+}
+}
+}
+},
+"$defs": {
+"re_ignition_decision": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"decision",
+"reason",
+"source_layer",
+"next_layer",
+"refined_question",
+"requires_human_review",
+"cycle_status",
+"trace_link"
+],
+"properties": {
+"decision": {
+"type": "string",
+"description": "Final routing or re-ignition decision.",
+"enum": [
+"conclude",
+"hold",
+"request_human_review",
+"return_to_counter_question",
+"return_to_self_dialogue",
+"continue_to_compression",
+"reignite_with_refined_question",
+"stop_cycle"
+]
+},
+"reason": {
+"type": "string",
+"description": "Reason for the decision.",
+"minLength": 1
+},
+"source_layer": {
+"type": "string",
+"description": "Layer that produced the material used for this decision.",
+"minLength": 1
+},
+"next_layer": {
+"type": "string",
+"description": "Next layer or terminal state after this decision.",
+"minLength": 1
+},
+"refined_question": {
+"type": [
+"string",
+"null"
+],
+"description": "Refined question used for re-ignition. May be null when the cycle concludes, holds, or stops."
+},
+"requires_human_review": {
+"type": "boolean",
+"description": "Whether human review is required before the decision is executed."
+},
+"cycle_status": {
+"type": "string",
+"description": "Status of the current reasoning cycle.",
+"enum": [
+"completed",
+"held",
+"returned",
+"reignited",
+"stopped",
+"human_review_required"
+]
+},
+"trace_link": {
+"type": "string",
+"description": "Trace identifier linking this decision to the current or previous reasoning cycle.",
+"minLength": 1
+}
+}
+}
+}
+}
