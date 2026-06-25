@@ -11,6 +11,10 @@ This script currently validates:
 * v0.2 Counter-Question Layer
   schema : schemas/counter-question-layer.schema.json
   example: examples/counter-question-layer.example.yaml
+
+* v0.3 Self-Dialogue Loop
+  schema : schemas/self-dialogue-loop.schema.json
+  example: examples/self-dialogue-loop.example.yaml
 """
 
 from pathlib import Path
@@ -32,6 +36,11 @@ VALIDATION_TARGETS = [
         "name": "v0.2 Counter-Question Layer",
         "schema": ROOT / "schemas" / "counter-question-layer.schema.json",
         "example": ROOT / "examples" / "counter-question-layer.example.yaml",
+    },
+    {
+        "name": "v0.3 Self-Dialogue Loop",
+        "schema": ROOT / "schemas" / "self-dialogue-loop.schema.json",
+        "example": ROOT / "examples" / "self-dialogue-loop.example.yaml",
     },
 ]
 
@@ -117,4 +126,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
