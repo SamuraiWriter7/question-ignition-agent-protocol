@@ -6,6 +6,114 @@ This project follows a candidate-based versioning flow during early protocol dev
 
 ---
 
+## [v0.3.0-candidate] - 2026-06-25
+
+### Added
+
+* Added the **Self-Dialogue Loop** as an independent reasoning layer.
+* Added JSON Schema for the v0.3 layer:
+
+```text
+schemas/self-dialogue-loop.schema.json
+```
+
+* Added example YAML configuration for the v0.3 layer:
+
+```text
+examples/self-dialogue-loop.example.yaml
+```
+
+* Updated validation script to validate v0.1, v0.2, and v0.3 examples:
+
+```text
+scripts/validate_examples.py
+```
+
+* Updated `README.md` to describe:
+
+  * v0.3 Self-Dialogue Loop
+  * self-dialogue modes
+  * loop responsibilities
+  * engine position
+  * dialogue turn output structure
+  * decision policy
+  * updated repository structure
+  * updated roadmap
+  * updated design principle
+
+### Self-Dialogue Modes
+
+v0.3 introduces the following self-dialogue modes:
+
+```text
+hypothesis_generation
+hypothesis_testing
+alternative_comparison
+contradiction_probe
+assumption_review
+branch_selection
+summary_preparation
+```
+
+### Loop Responsibilities
+
+The Self-Dialogue Loop is responsible for:
+
+* generating candidate hypotheses
+* testing hypotheses through internal question-answer pairs
+* comparing alternative interpretations
+* probing for contradictions
+* reviewing remaining assumptions
+* selecting useful reasoning branches
+* preparing a traceable summary for downstream verification
+
+### Output Structure
+
+Each self-dialogue turn may include:
+
+* prompt_question
+* internal_answer
+* mode
+* hypothesis
+* confidence
+* contradiction_found
+* next_action
+
+### Decision Policy
+
+After running the self-dialogue loop, the layer may decide:
+
+```text
+continue_to_expansion
+hold_for_verification
+request_human_review
+return_to_counter_question
+```
+
+### Purpose
+
+v0.3 prevents internal reasoning from becoming uncontrolled monologue.
+
+Self-dialogue is treated as a structured hypothesis-development loop, not as final confirmation.
+
+It allows the engine to grow hypotheses while preserving assumptions, contradiction findings, confidence levels, and next actions in a traceable form.
+
+### Design Principle
+
+```text
+A premise should be tested before internal reasoning begins.
+Self-dialogue should grow hypotheses without becoming self-hypnosis.
+```
+
+### Status
+
+* Status: `v0.3.0-candidate`
+* Stability: experimental
+* Scope: Self-Dialogue Loop
+* Validation: JSON Schema + YAML example validation
+
+---
+
 ## [v0.2.0-candidate] - 2026-06-25
 
 ### Added
