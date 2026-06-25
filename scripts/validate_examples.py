@@ -15,6 +15,10 @@ This script currently validates:
 * v0.3 Self-Dialogue Loop
   schema : schemas/self-dialogue-loop.schema.json
   example: examples/self-dialogue-loop.example.yaml
+
+* v0.4 Verification Governor
+  schema : schemas/verification-governor.schema.json
+  example: examples/verification-governor.example.yaml
 """
 
 from pathlib import Path
@@ -41,6 +45,11 @@ VALIDATION_TARGETS = [
         "name": "v0.3 Self-Dialogue Loop",
         "schema": ROOT / "schemas" / "self-dialogue-loop.schema.json",
         "example": ROOT / "examples" / "self-dialogue-loop.example.yaml",
+    },
+    {
+        "name": "v0.4 Verification Governor",
+        "schema": ROOT / "schemas" / "verification-governor.schema.json",
+        "example": ROOT / "examples" / "verification-governor.example.yaml",
     },
 ]
 
@@ -126,3 +135,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
