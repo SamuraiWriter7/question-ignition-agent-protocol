@@ -6,6 +6,139 @@ This project follows a candidate-based versioning flow during early protocol dev
 
 ---
 
+## [v0.5.0-candidate] - 2026-06-25
+
+### Added
+
+* Added the **Re-Ignition Policy** as the final decision layer of the first architecture arc.
+* Added JSON Schema for the v0.5 layer:
+
+```text
+schemas/re-ignition-policy.schema.json
+```
+
+* Added example YAML configuration for the v0.5 layer:
+
+```text
+examples/re-ignition-policy.example.yaml
+```
+
+* Updated validation script to validate v0.1, v0.2, v0.3, v0.4, and v0.5 examples:
+
+```text
+scripts/validate_examples.py
+```
+
+* Updated `README.md` to describe:
+
+  * v0.5 Re-Ignition Policy
+  * re-ignition decision types
+  * policy responsibilities
+  * engine position
+  * re-ignition output structure
+  * first architecture arc completion
+  * updated repository structure
+  * updated design principle
+
+### Re-Ignition Decision Types
+
+v0.5 introduces the following decision types:
+
+```text
+conclude
+hold
+request_human_review
+return_to_counter_question
+return_to_self_dialogue
+continue_to_compression
+reignite_with_refined_question
+stop_cycle
+```
+
+### Policy Responsibilities
+
+The Re-Ignition Policy is responsible for:
+
+* determining whether the current cycle has reached a conclusion
+* detecting whether evidence is still missing
+* detecting whether unresolved contradictions remain
+* deciding whether to return to an earlier layer
+* deciding whether human review is required
+* generating a refined next question
+* preventing endless re-ignition loops
+* preserving traceability across cycles
+
+### Output Structure
+
+Each re-ignition decision may include:
+
+* decision
+* reason
+* source_layer
+* next_layer
+* refined_question
+* requires_human_review
+* cycle_status
+* trace_link
+
+### Decision Policy
+
+After running the Re-Ignition Policy, the engine may decide:
+
+```text
+conclude
+hold
+request_human_review
+return_to_counter_question
+return_to_self_dialogue
+reignite_with_refined_question
+stop_cycle
+```
+
+### First Architecture Arc
+
+v0.5 completes the first architecture arc:
+
+```text
+v0.1 — Engine Configuration
+v0.2 — Counter-Question Layer
+v0.3 — Self-Dialogue Loop
+v0.4 — Verification Governor
+v0.5 — Re-Ignition Policy
+```
+
+This means the engine now has:
+
+* ignition
+* premise testing
+* hypothesis development
+* verification
+* compression handoff
+* final stop / hold / return / re-ignition control
+
+### Purpose
+
+v0.5 prevents the engine from continuing simply because continuation is possible.
+
+Re-ignition is allowed only when the previous reasoning cycle has passed through verification, compression, trace preservation, and loop control.
+
+### Design Principle
+
+```text
+The engine should not continue because it can.
+It should continue only when the previous cycle produces a valid next ignition.
+A reasoning engine is autonomous only if it can stop, hold, return, or re-ignite with control.
+```
+
+### Status
+
+* Status: `v0.5.0-candidate`
+* Stability: experimental
+* Scope: Re-Ignition Policy / first architecture arc completion
+* Validation: JSON Schema + YAML example validation
+
+---
+
 ## [v0.4.0-candidate] - 2026-06-25
 
 ### Added
@@ -68,37 +201,9 @@ The Verification Governor is responsible for:
 * determining whether human review is required
 * preparing verified material for compression
 
-### Output Structure
-
-Each verification finding may include:
-
-* finding
-* type
-* target
-* severity
-* evidence_status
-* contradiction_detected
-* recommended_action
-
-### Decision Policy
-
-After running the Verification Governor, the layer may decide:
-
-```text
-continue_to_compression
-hold_for_evidence
-return_to_self_dialogue
-return_to_counter_question
-request_human_review
-stop_cycle
-```
-
 ### Purpose
 
 v0.4 prevents hypotheses generated through self-dialogue from becoming overconfident conclusions before verification.
-
-The Verification Governor is not only a fact-checking layer.
-It is a reasoning control mechanism that checks evidence, contradiction, scope, unsupported inference, repetition, confidence, and human review conditions.
 
 ### Design Principle
 
@@ -139,18 +244,6 @@ examples/self-dialogue-loop.example.yaml
 scripts/validate_examples.py
 ```
 
-* Updated `README.md` to describe:
-
-  * v0.3 Self-Dialogue Loop
-  * self-dialogue modes
-  * loop responsibilities
-  * engine position
-  * dialogue turn output structure
-  * decision policy
-  * updated repository structure
-  * updated roadmap
-  * updated design principle
-
 ### Self-Dialogue Modes
 
 v0.3 introduces the following self-dialogue modes:
@@ -165,48 +258,11 @@ branch_selection
 summary_preparation
 ```
 
-### Loop Responsibilities
-
-The Self-Dialogue Loop is responsible for:
-
-* generating candidate hypotheses
-* testing hypotheses through internal question-answer pairs
-* comparing alternative interpretations
-* probing for contradictions
-* reviewing remaining assumptions
-* selecting useful reasoning branches
-* preparing a traceable summary for downstream verification
-
-### Output Structure
-
-Each self-dialogue turn may include:
-
-* prompt_question
-* internal_answer
-* mode
-* hypothesis
-* confidence
-* contradiction_found
-* next_action
-
-### Decision Policy
-
-After running the self-dialogue loop, the layer may decide:
-
-```text
-continue_to_expansion
-hold_for_verification
-request_human_review
-return_to_counter_question
-```
-
 ### Purpose
 
 v0.3 prevents internal reasoning from becoming uncontrolled monologue.
 
 Self-dialogue is treated as a structured hypothesis-development loop, not as final confirmation.
-
-It allows the engine to grow hypotheses while preserving assumptions, contradiction findings, confidence levels, and next actions in a traceable form.
 
 ### Design Principle
 
@@ -247,17 +303,6 @@ examples/counter-question-layer.example.yaml
 scripts/validate_examples.py
 ```
 
-* Updated `README.md` to describe:
-
-  * v0.2 Counter-Question Layer
-  * counter-question types
-  * layer responsibilities
-  * engine position
-  * output format
-  * decision policy
-  * updated repository structure
-  * updated roadmap
-
 ### Counter-Question Types
 
 v0.2 introduces the following counter-question types:
@@ -270,40 +315,6 @@ evidence_check
 perspective_shift
 risk_check
 human_intent_check
-```
-
-### Layer Responsibilities
-
-The Counter-Question Layer is responsible for:
-
-* identifying hidden assumptions
-* checking whether key terms are defined
-* detecting scope ambiguity
-* requesting missing evidence
-* generating alternative viewpoints
-* detecting reasoning risks
-* determining whether human review is needed
-
-### Output Structure
-
-Each counter-question may include:
-
-* question
-* type
-* target
-* purpose
-* priority
-* requires_human_review
-
-### Decision Policy
-
-After generating counter-questions, the layer may decide:
-
-```text
-continue
-hold
-request_human_review
-reignite_with_refined_question
 ```
 
 ### Purpose
