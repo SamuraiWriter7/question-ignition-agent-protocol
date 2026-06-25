@@ -6,6 +6,116 @@ This project follows a candidate-based versioning flow during early protocol dev
 
 ---
 
+## [v0.4.0-candidate] - 2026-06-25
+
+### Added
+
+* Added the **Verification Governor** as an independent reasoning control layer.
+* Added JSON Schema for the v0.4 layer:
+
+```text
+schemas/verification-governor.schema.json
+```
+
+* Added example YAML configuration for the v0.4 layer:
+
+```text
+examples/verification-governor.example.yaml
+```
+
+* Updated validation script to validate v0.1, v0.2, v0.3, and v0.4 examples:
+
+```text
+scripts/validate_examples.py
+```
+
+* Updated `README.md` to describe:
+
+  * v0.4 Verification Governor
+  * verification types
+  * governor responsibilities
+  * engine position
+  * verification finding output structure
+  * decision policy
+  * updated repository structure
+  * updated roadmap
+  * updated design principle
+
+### Verification Types
+
+v0.4 introduces the following verification types:
+
+```text
+evidence_check
+contradiction_check
+scope_check
+unsupported_inference_check
+loop_check
+confidence_check
+human_review_check
+```
+
+### Governor Responsibilities
+
+The Verification Governor is responsible for:
+
+* checking whether hypotheses are supported by evidence
+* detecting contradictions between reasoning branches
+* detecting unsupported inference
+* checking whether the reasoning scope has been exceeded
+* detecting repeated loops
+* reducing overconfidence
+* determining whether human review is required
+* preparing verified material for compression
+
+### Output Structure
+
+Each verification finding may include:
+
+* finding
+* type
+* target
+* severity
+* evidence_status
+* contradiction_detected
+* recommended_action
+
+### Decision Policy
+
+After running the Verification Governor, the layer may decide:
+
+```text
+continue_to_compression
+hold_for_evidence
+return_to_self_dialogue
+return_to_counter_question
+request_human_review
+stop_cycle
+```
+
+### Purpose
+
+v0.4 prevents hypotheses generated through self-dialogue from becoming overconfident conclusions before verification.
+
+The Verification Governor is not only a fact-checking layer.
+It is a reasoning control mechanism that checks evidence, contradiction, scope, unsupported inference, repetition, confidence, and human review conditions.
+
+### Design Principle
+
+```text
+A hypothesis should not become a conclusion before verification.
+The governor prevents reasoning combustion from becoming runaway certainty.
+```
+
+### Status
+
+* Status: `v0.4.0-candidate`
+* Stability: experimental
+* Scope: Verification Governor
+* Validation: JSON Schema + YAML example validation
+
+---
+
 ## [v0.3.0-candidate] - 2026-06-25
 
 ### Added
