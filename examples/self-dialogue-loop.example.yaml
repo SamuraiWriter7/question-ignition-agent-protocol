@@ -1,0 +1,156 @@
+layer_id: self-dialogue-loop
+name: Self-Dialogue Loop
+version: v0.3.0-candidate
+
+description: >
+  A structured internal reasoning loop that develops hypotheses through
+  controlled question-and-answer turns after counter-questioning has tested
+  assumptions, definitions, scope, and risks.
+
+purpose: >
+  To grow, test, compare, and summarize hypotheses without allowing internal
+  reasoning to become self-hypnosis, uncontrolled speculation, or infinite
+  branching.
+
+position:
+  previous_layer: counter_question
+  current_layer: self_dialogue
+  next_layer: expansion
+
+self_dialogue_modes:
+  - hypothesis_generation
+  - hypothesis_testing
+  - alternative_comparison
+  - contradiction_probe
+  - assumption_review
+  - branch_selection
+  - summary_preparation
+
+responsibilities:
+  - generate_candidate_hypotheses
+  - test_hypotheses
+  - compare_alternative_interpretations
+  - probe_for_contradictions
+  - review_remaining_assumptions
+  - select_useful_reasoning_branches
+  - prepare_traceable_summary
+
+input_contract:
+  required_inputs:
+    - initial_question
+    - decomposed_questions
+    - counter_questions
+    - premise_findings
+    - definition_findings
+    - scope_findings
+    - risk_findings
+  optional_inputs:
+    - user_intent
+    - prior_trace
+    - known_constraints
+    - source_context
+    - evidence_context
+    - risk_context
+    - previous_decision
+
+output_contract:
+  required_outputs:
+    - self_dialogue_trace
+    - candidate_hypotheses
+    - tested_hypotheses
+    - contradiction_findings
+    - selected_branches
+    - summary_for_verification
+    - decision
+
+dialogue_turns:
+  - prompt_question: "What is the first plausible hypothesis after counter-questioning?"
+    internal_answer: >
+      The engine can proceed if the initial question has a stable scope and
+      the counter-question layer has not found a blocking contradiction.
+    mode: hypothesis_generation
+    hypothesis: >
+      A controlled reasoning cycle can begin after premise testing.
+    confidence: medium
+    contradiction_found: false
+    next_action: continue_dialogue
+
+  - prompt_question: "Does this hypothesis depend on an untested assumption?"
+    internal_answer: >
+      Yes. It assumes that the counter-question layer has sufficiently tested
+      definitions, scope, and risks. This assumption should remain visible in
+      the trace.
+    mode: assumption_review
+    hypothesis: >
+      Counter-question findings are sufficient to begin self-dialogue.
+    confidence: medium
+    contradiction_found: false
+    next_action: probe_contradiction
+
+  - prompt_question: "What contradiction could weaken the current hypothesis?"
+    internal_answer: >
+      If the counter-question layer detected missing evidence or unresolved
+      intent, then the self-dialogue loop should not expand freely and may need
+      to return to counter-questioning.
+    mode: contradiction_probe
+    hypothesis: >
+      The engine should continue to self-dialogue unless unresolved ambiguity
+      requires returning to the Counter-Question Layer.
+    confidence: medium
+    contradiction_found: true
+    next_action: compare_alternative
+
+  - prompt_question: "What alternative interpretation should be compared?"
+    internal_answer: >
+      The engine may treat the question as exploratory rather than conclusive,
+      allowing best-effort hypothesis generation while marking unresolved
+      assumptions for later verification.
+    mode: alternative_comparison
+    hypothesis: >
+      Exploratory reasoning can continue if unresolved assumptions are marked
+      and passed to verification.
+    confidence: high
+    contradiction_found: false
+    next_action: prepare_summary
+
+  - prompt_question: "Which reasoning branch should be selected for downstream expansion?"
+    internal_answer: >
+      Select the branch that treats self-dialogue as exploratory hypothesis
+      development, not as final confirmation. Pass unresolved assumptions,
+      contradictions, and confidence levels to the Verification Layer.
+    mode: branch_selection
+    hypothesis: >
+      Self-dialogue should prepare structured hypotheses for verification
+      rather than produce final conclusions.
+    confidence: high
+    contradiction_found: false
+    next_action: prepare_summary
+
+  - prompt_question: "What summary should be passed to the next layer?"
+    internal_answer: >
+      The self-dialogue loop generated candidate hypotheses, reviewed
+      assumptions, detected one contradiction risk, compared an exploratory
+      alternative, and selected a branch that must be verified before any final
+      conclusion is allowed.
+    mode: summary_preparation
+    hypothesis: >
+      Controlled self-dialogue can develop hypotheses safely when it preserves
+      assumptions, contradiction findings, and confidence levels in the trace.
+    confidence: high
+    contradiction_found: false
+    next_action: continue_dialogue
+
+decision_policy:
+  allowed_decisions:
+    - continue_to_expansion
+    - hold_for_verification
+    - request_human_review
+    - return_to_counter_question
+  default_decision: continue_to_expansion
+
+safety_controls:
+  max_dialogue_turns: 6
+  prevent_self_hypnosis: true
+  contradiction_probe_required: true
+  allow_return_to_counter_question: true
+  human_review_gate: true
