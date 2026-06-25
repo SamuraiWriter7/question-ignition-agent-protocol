@@ -1,0 +1,344 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://example.org/schemas/question-ignition-engine-config.schema.json",
+"title": "Question-Ignition Autonomous Engine Configuration",
+"description": "Schema for configuring a controlled question-driven autonomous reasoning engine.",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"engine_id",
+"name",
+"description",
+"cycle",
+"layers",
+"control",
+"semantics",
+"multi_model_design",
+"output_contract",
+"naming"
+],
+"properties": {
+"engine_id": {
+"type": "string",
+"description": "Unique identifier for this engine configuration.",
+"minLength": 1,
+"pattern": "^[a-z0-9][a-z0-9.*-]*$"
+},
+"name": {
+"type": "string",
+"description": "Human-readable engine name.",
+"minLength": 1
+},
+"description": {
+"type": "string",
+"description": "Short description of the engine.",
+"minLength": 1
+},
+"cycle": {
+"type": "object",
+"description": "Reasoning cycle phases.",
+"additionalProperties": false,
+"required": [
+"phases"
+],
+"properties": {
+"phases": {
+"type": "array",
+"description": "Ordered phases of the reasoning cycle.",
+"minItems": 1,
+"items": {
+"type": "string",
+"minLength": 1
+}
+}
+}
+},
+"layers": {
+"type": "array",
+"description": "Ordered engine layers.",
+"minItems": 1,
+"items": {
+"$ref": "#/$defs/layer"
+}
+},
+"control": {
+"type": "object",
+"description": "Control policy for preventing runaway reasoning.",
+"additionalProperties": false,
+"required": [
+"max_depth",
+"max_questions_per_cycle",
+"evidence_required",
+"contradiction_check",
+"human_review_gate",
+"cost_budget",
+"stop_when"
+],
+"properties": {
+"max_depth": {
+"type": "integer",
+"description": "Maximum depth of recursive question expansion.",
+"minimum": 1
+},
+"max_questions_per_cycle": {
+"type": "integer",
+"description": "Maximum number of questions generated per reasoning cycle.",
+"minimum": 1
+},
+"evidence_required": {
+"type": "boolean",
+"description": "Whether evidence is required during verification."
+},
+"contradiction_check": {
+"type": "boolean",
+"description": "Whether contradiction checks are required."
+},
+"human_review_gate": {
+"type": "boolean",
+"description": "Whether human review may be required for uncertain or high-risk cases."
+},
+"cost_budget": {
+"type": "string",
+"description": "Cost-control mode for reasoning cycles.",
+"enum": [
+"fixed",
+"adaptive",
+"unlimited"
+]
+},
+"stop_when": {
+"type": "array",
+"description": "Conditions that stop or interrupt the reasoning cycle.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"conclusion_reached",
+"contradiction_detected",
+"evidence_missing",
+"loop_repeated",
+"scope_exceeded",
+"human_review_required",
+"cost_budget_exceeded"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"semantics": {
+"type": "object",
+"description": "Semantic definitions for reasoning operations.",
+"additionalProperties": false,
+"required": [
+"counter_question",
+"self_dialogue",
+"roles"
+],
+"properties": {
+"counter_question": {
+"$ref": "#/$defs/semantic_block"
+},
+"self_dialogue": {
+"$ref": "#/$defs/semantic_block"
+},
+"roles": {
+"type": "array",
+"description": "Functional roles inside the reasoning cycle.",
+"minItems": 1,
+"items": {
+"$ref": "#/$defs/semantic_role"
+}
+}
+}
+},
+"multi_model_design": {
+"type": "object",
+"description": "Responsibility distribution across small, medium, and large models.",
+"additionalProperties": false,
+"required": [
+"small_model",
+"medium_model",
+"large_model"
+],
+"properties": {
+"small_model": {
+"$ref": "#/$defs/model_role"
+},
+"medium_model": {
+"$ref": "#/$defs/model_role"
+},
+"large_model": {
+"$ref": "#/$defs/model_role"
+}
+}
+},
+"output_contract": {
+"type": "object",
+"description": "Required outputs for each reasoning cycle.",
+"additionalProperties": false,
+"required": [
+"required_outputs",
+"decision_status",
+"trace_required"
+],
+"properties": {
+"required_outputs": {
+"type": "array",
+"description": "Fields that every reasoning cycle should output.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"initial_question",
+"decomposed_questions",
+"counter_questions",
+"self_dialogue_trace",
+"derived_questions",
+"verification_result",
+"compression_summary",
+"decision"
+]
+},
+"uniqueItems": true
+},
+"decision_status": {
+"type": "array",
+"description": "Allowed final decision states for a reasoning cycle.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"conclude",
+"hold",
+"reignite",
+"human_review_required"
+]
+},
+"uniqueItems": true
+},
+"trace_required": {
+"type": "boolean",
+"description": "Whether each reasoning cycle must produce a trace."
+}
+}
+},
+"naming": {
+"type": "object",
+"description": "Naming metadata for the engine.",
+"additionalProperties": false,
+"required": [
+"primary_name",
+"english_name",
+"aliases"
+],
+"properties": {
+"primary_name": {
+"type": "string",
+"minLength": 1
+},
+"english_name": {
+"type": "string",
+"minLength": 1
+},
+"aliases": {
+"type": "array",
+"minItems": 0,
+"items": {
+"type": "string",
+"minLength": 1
+},
+"uniqueItems": true
+}
+}
+}
+},
+"$defs": {
+"layer": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"id",
+"name",
+"role"
+],
+"properties": {
+"id": {
+"type": "string",
+"description": "Machine-readable layer identifier.",
+"minLength": 1,
+"pattern": "^[a-z0-9][a-z0-9*:-]*$"
+},
+"name": {
+"type": "string",
+"description": "Human-readable layer name.",
+"minLength": 1
+},
+"role": {
+"type": "string",
+"description": "Role of the layer.",
+"minLength": 1
+}
+}
+},
+"semantic_block": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"description",
+"examples"
+],
+"properties": {
+"description": {
+"type": "string",
+"minLength": 1
+},
+"examples": {
+"type": "array",
+"minItems": 1,
+"items": {
+"type": "string",
+"minLength": 1
+}
+}
+}
+},
+"semantic_role": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"name",
+"function"
+],
+"properties": {
+"name": {
+"type": "string",
+"minLength": 1
+},
+"function": {
+"type": "string",
+"minLength": 1
+}
+}
+},
+"model_role": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"responsibilities"
+],
+"properties": {
+"responsibilities": {
+"type": "array",
+"description": "Responsibilities assigned to this model tier.",
+"minItems": 1,
+"items": {
+"type": "string",
+"minLength": 1
+},
+"uniqueItems": true
+}
+}
+}
+}
+}
