@@ -19,6 +19,10 @@ This script currently validates:
 * v0.4 Verification Governor
   schema : schemas/verification-governor.schema.json
   example: examples/verification-governor.example.yaml
+
+* v0.5 Re-Ignition Policy
+  schema : schemas/re-ignition-policy.schema.json
+  example: examples/re-ignition-policy.example.yaml
 """
 
 from pathlib import Path
@@ -50,6 +54,11 @@ VALIDATION_TARGETS = [
         "name": "v0.4 Verification Governor",
         "schema": ROOT / "schemas" / "verification-governor.schema.json",
         "example": ROOT / "examples" / "verification-governor.example.yaml",
+    },
+    {
+        "name": "v0.5 Re-Ignition Policy",
+        "schema": ROOT / "schemas" / "re-ignition-policy.schema.json",
+        "example": ROOT / "examples" / "re-ignition-policy.example.yaml",
     },
 ]
 
@@ -135,4 +144,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
