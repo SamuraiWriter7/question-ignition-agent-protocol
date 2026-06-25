@@ -99,16 +99,22 @@ What risk appears if this question is answered too quickly?
 Is the user's intent clear enough to continue?
 ```
 
-### 4. Self-Dialogue Layer
+### 4. Self-Dialogue Loop
 
-Develops hypotheses through structured internal question-and-answer cycles.
+Develops hypotheses through structured internal question-and-answer turns.
+
+This layer does not produce final conclusions.
+It grows, tests, compares, and summarizes hypotheses so that later layers can verify them.
 
 Examples:
 
 ```text
-What happens if hypothesis A is true?
-Does case B cause the structure to fail?
-Can this be connected to C?
+What is the first plausible hypothesis after counter-questioning?
+Does this hypothesis depend on an untested assumption?
+What contradiction could weaken the current hypothesis?
+What alternative interpretation should be compared?
+Which reasoning branch should be selected for downstream expansion?
+What summary should be passed to the next layer?
 ```
 
 ### 5. Expansion Layer
@@ -199,7 +205,7 @@ Decomposition
   ↓
 Counter-Question Layer
   ↓
-Self-Dialogue
+Self-Dialogue Loop
   ↓
 Derived Questions
   ↓
@@ -239,6 +245,93 @@ reignite_with_refined_question
 ```text
 schemas/counter-question-layer.schema.json
 examples/counter-question-layer.example.yaml
+```
+
+---
+
+## v0.3 — Self-Dialogue Loop
+
+v0.3 defines the **Self-Dialogue Loop** as an independent reasoning layer.
+
+Self-dialogue is not free-form monologue.
+It is a controlled internal reasoning loop that develops hypotheses through structured question-and-answer turns after the original question has passed through counter-questioning.
+
+### Self-Dialogue Modes
+
+```text
+hypothesis_generation
+hypothesis_testing
+alternative_comparison
+contradiction_probe
+assumption_review
+branch_selection
+summary_preparation
+```
+
+### Responsibilities
+
+The Self-Dialogue Loop is responsible for:
+
+* generating candidate hypotheses
+* testing hypotheses through internal question-answer pairs
+* comparing alternative interpretations
+* probing for contradictions
+* reviewing remaining assumptions
+* selecting useful reasoning branches
+* preparing a traceable summary for downstream verification
+
+### Position in the Engine
+
+```text
+Question
+  ↓
+Decomposition
+  ↓
+Counter-Question Layer
+  ↓
+Self-Dialogue Loop
+  ↓
+Expansion
+  ↓
+Verification
+  ↓
+Compression
+  ↓
+Stop / Re-Ignition
+```
+
+The Self-Dialogue Loop begins only after the question has passed through counter-questioning.
+
+This prevents the engine from developing hypotheses too early, before premises, definitions, scope, evidence conditions, and risks have been tested.
+
+### Self-Dialogue Output
+
+Each self-dialogue turn should include:
+
+* prompt_question
+* internal_answer
+* mode
+* hypothesis
+* confidence
+* contradiction_found
+* next_action
+
+### Layer Decision
+
+After running the self-dialogue loop, the layer may decide:
+
+```text
+continue_to_expansion
+hold_for_verification
+request_human_review
+return_to_counter_question
+```
+
+### v0.3 Files
+
+```text
+schemas/self-dialogue-loop.schema.json
+examples/self-dialogue-loop.example.yaml
 ```
 
 ---
@@ -346,10 +439,12 @@ The small model handles lightweight branching and checks, the medium model organ
 ├── CHANGELOG.md
 ├── schemas/
 │   ├── question-ignition-engine-config.schema.json
-│   └── counter-question-layer.schema.json
+│   ├── counter-question-layer.schema.json
+│   └── self-dialogue-loop.schema.json
 ├── examples/
 │   ├── question-ignition-autonomous-engine.example.yaml
-│   └── counter-question-layer.example.yaml
+│   ├── counter-question-layer.example.yaml
+│   └── self-dialogue-loop.example.yaml
 ├── scripts/
 │   └── validate_examples.py
 └── .github/
@@ -378,6 +473,7 @@ The validation script checks:
 ```text
 v0.1 — Question-Ignition Autonomous Engine Configuration
 v0.2 — Counter-Question Layer
+v0.3 — Self-Dialogue Loop
 ```
 
 GitHub Actions also runs validation on push, pull request, and manual workflow dispatch.
@@ -416,6 +512,7 @@ Define structured self-dialogue.
 * internal question-answer pairs
 * hypothesis growth
 * contradiction discovery
+* alternative comparison
 * branch control
 * traceable self-dialogue records
 
@@ -471,6 +568,7 @@ The engine starts the reasoning cycle, the rumination layer digests errors, memo
 ```text
 A question should ignite reasoning.
 A premise should be tested before acceleration.
+Self-dialogue should grow hypotheses without becoming self-hypnosis.
 Reasoning should circulate.
 Circulation should be verified.
 Verification should compress.
@@ -480,6 +578,7 @@ The engine should stop, hold, or re-ignite.
 
 問いは推論を起動する。
 前提は加速前に検査される。
+自問自答は仮説を育てるが、自己催眠になってはならない。
 推論は循環する。
 循環は検証される。
 検証は圧縮される。
@@ -496,6 +595,6 @@ TBD.
 
 ## Status
 
-This project is currently at **v0.2.0-candidate**.
+This project is currently at **v0.3.0-candidate**.
 
-The current milestone defines the Counter-Question Layer as an independent reasoning layer for testing assumptions, definitions, scope, evidence, risks, and human intent before deeper self-dialogue begins.
+The current milestone defines the Self-Dialogue Loop as an independent reasoning layer for generating, testing, comparing, and summarizing hypotheses after counter-questioning and before downstream expansion and verification.
