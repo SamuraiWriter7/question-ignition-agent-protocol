@@ -1,0 +1,314 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://example.org/schemas/counter-question-layer.schema.json",
+"title": "Counter-Question Layer",
+"description": "Schema for defining the Counter-Question Layer inside the Question-Ignition Autonomous Engine.",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"layer_id",
+"name",
+"version",
+"description",
+"purpose",
+"position",
+"counter_question_types",
+"responsibilities",
+"input_contract",
+"output_contract",
+"decision_policy",
+"safety_controls"
+],
+"properties": {
+"layer_id": {
+"type": "string",
+"description": "Machine-readable identifier for the layer.",
+"minLength": 1,
+"pattern": "^[a-z0-9][a-z0-9._-]*$"
+},
+"name": {
+"type": "string",
+"description": "Human-readable layer name.",
+"minLength": 1
+},
+"version": {
+"type": "string",
+"description": "Layer version.",
+"minLength": 1,
+"pattern": "^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z0-9.-]+)?$"
+},
+"description": {
+"type": "string",
+"description": "Short description of the layer.",
+"minLength": 1
+},
+"purpose": {
+"type": "string",
+"description": "Purpose of the Counter-Question Layer.",
+"minLength": 1
+},
+"position": {
+"type": "object",
+"description": "Position of this layer within the reasoning engine.",
+"additionalProperties": false,
+"required": [
+"previous_layer",
+"current_layer",
+"next_layer"
+],
+"properties": {
+"previous_layer": {
+"type": "string",
+"description": "Layer that runs before this layer.",
+"minLength": 1
+},
+"current_layer": {
+"type": "string",
+"description": "Current layer identifier.",
+"minLength": 1
+},
+"next_layer": {
+"type": "string",
+"description": "Layer that runs after this layer.",
+"minLength": 1
+}
+}
+},
+"counter_question_types": {
+"type": "array",
+"description": "Supported types of counter-questions.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"premise_check",
+"definition_check",
+"scope_check",
+"evidence_check",
+"perspective_shift",
+"risk_check",
+"human_intent_check"
+]
+},
+"uniqueItems": true
+},
+"responsibilities": {
+"type": "array",
+"description": "Responsibilities of the Counter-Question Layer.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"identify_hidden_assumptions",
+"check_key_term_definitions",
+"detect_scope_ambiguity",
+"request_missing_evidence",
+"generate_alternative_perspectives",
+"detect_reasoning_risks",
+"determine_human_review_need"
+]
+},
+"uniqueItems": true
+},
+"input_contract": {
+"type": "object",
+"description": "Input required by the Counter-Question Layer.",
+"additionalProperties": false,
+"required": [
+"required_inputs"
+],
+"properties": {
+"required_inputs": {
+"type": "array",
+"description": "Required input fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"initial_question",
+"decomposed_questions",
+"ignition_context",
+"scope"
+]
+},
+"uniqueItems": true
+},
+"optional_inputs": {
+"type": "array",
+"description": "Optional input fields.",
+"minItems": 0,
+"items": {
+"type": "string",
+"enum": [
+"user_intent",
+"prior_trace",
+"known_constraints",
+"source_context",
+"risk_context"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"output_contract": {
+"type": "object",
+"description": "Output produced by the Counter-Question Layer.",
+"additionalProperties": false,
+"required": [
+"required_outputs"
+],
+"properties": {
+"required_outputs": {
+"type": "array",
+"description": "Required output fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"counter_questions",
+"premise_findings",
+"definition_findings",
+"scope_findings",
+"risk_findings",
+"decision"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"counter_questions": {
+"type": "array",
+"description": "Example or configured counter-questions produced by this layer.",
+"minItems": 1,
+"items": {
+"$ref": "#/$defs/counter_question"
+}
+},
+"decision_policy": {
+"type": "object",
+"description": "Policy for deciding what happens after counter-question generation.",
+"additionalProperties": false,
+"required": [
+"allowed_decisions",
+"default_decision"
+],
+"properties": {
+"allowed_decisions": {
+"type": "array",
+"description": "Allowed decisions after this layer runs.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"continue",
+"hold",
+"request_human_review",
+"reignite_with_refined_question"
+]
+},
+"uniqueItems": true
+},
+"default_decision": {
+"type": "string",
+"description": "Default decision when no blocking issue is found.",
+"enum": [
+"continue",
+"hold",
+"request_human_review",
+"reignite_with_refined_question"
+]
+}
+}
+},
+"safety_controls": {
+"type": "object",
+"description": "Controls that prevent counter-questioning from becoming obstructive or infinite.",
+"additionalProperties": false,
+"required": [
+"max_counter_questions",
+"avoid_infinite_clarification",
+"allow_best_effort_reasoning",
+"human_review_gate"
+],
+"properties": {
+"max_counter_questions": {
+"type": "integer",
+"description": "Maximum number of counter-questions generated in one cycle.",
+"minimum": 1
+},
+"avoid_infinite_clarification": {
+"type": "boolean",
+"description": "Whether the layer must avoid endless clarification loops."
+},
+"allow_best_effort_reasoning": {
+"type": "boolean",
+"description": "Whether the engine may proceed with best-effort reasoning when ambiguity remains."
+},
+"human_review_gate": {
+"type": "boolean",
+"description": "Whether human review may be requested for high-risk or unresolved cases."
+}
+}
+}
+},
+"$defs": {
+"counter_question": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"question",
+"type",
+"target",
+"purpose",
+"priority",
+"requires_human_review"
+],
+"properties": {
+"question": {
+"type": "string",
+"description": "The counter-question text.",
+"minLength": 1
+},
+"type": {
+"type": "string",
+"description": "Type of counter-question.",
+"enum": [
+"premise_check",
+"definition_check",
+"scope_check",
+"evidence_check",
+"perspective_shift",
+"risk_check",
+"human_intent_check"
+]
+},
+"target": {
+"type": "string",
+"description": "The premise, definition, scope, evidence, perspective, risk, or intent being questioned.",
+"minLength": 1
+},
+"purpose": {
+"type": "string",
+"description": "Why this counter-question is being asked.",
+"minLength": 1
+},
+"priority": {
+"type": "string",
+"description": "Priority level of the counter-question.",
+"enum": [
+"low",
+"medium",
+"high",
+"critical"
+]
+},
+"requires_human_review": {
+"type": "boolean",
+"description": "Whether this counter-question requires human review before deeper reasoning."
+}
+}
+}
+}
+}
