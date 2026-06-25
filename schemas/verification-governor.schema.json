@@ -1,0 +1,358 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://example.org/schemas/verification-governor.schema.json",
+"title": "Verification Governor",
+"description": "Schema for defining the Verification Governor inside the Question-Ignition Autonomous Engine.",
+"type": "object",
+"additionalProperties": false,
+"required": [
+"layer_id",
+"name",
+"version",
+"description",
+"purpose",
+"position",
+"verification_types",
+"responsibilities",
+"input_contract",
+"output_contract",
+"verification_findings",
+"decision_policy",
+"safety_controls"
+],
+"properties": {
+"layer_id": {
+"type": "string",
+"description": "Machine-readable identifier for the layer.",
+"minLength": 1,
+"pattern": "^[a-z0-9][a-z0-9._-]*$"
+},
+"name": {
+"type": "string",
+"description": "Human-readable layer name.",
+"minLength": 1
+},
+"version": {
+"type": "string",
+"description": "Layer version.",
+"minLength": 1,
+"pattern": "^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-z0-9.-]+)?$"
+},
+"description": {
+"type": "string",
+"description": "Short description of the layer.",
+"minLength": 1
+},
+"purpose": {
+"type": "string",
+"description": "Purpose of the Verification Governor.",
+"minLength": 1
+},
+"position": {
+"type": "object",
+"description": "Position of this layer within the reasoning engine.",
+"additionalProperties": false,
+"required": [
+"previous_layer",
+"current_layer",
+"next_layer"
+],
+"properties": {
+"previous_layer": {
+"type": "string",
+"description": "Layer that runs before this layer.",
+"minLength": 1
+},
+"current_layer": {
+"type": "string",
+"description": "Current layer identifier.",
+"minLength": 1
+},
+"next_layer": {
+"type": "string",
+"description": "Layer that runs after this layer.",
+"minLength": 1
+}
+}
+},
+"verification_types": {
+"type": "array",
+"description": "Supported verification types.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"evidence_check",
+"contradiction_check",
+"scope_check",
+"unsupported_inference_check",
+"loop_check",
+"confidence_check",
+"human_review_check"
+]
+},
+"uniqueItems": true
+},
+"responsibilities": {
+"type": "array",
+"description": "Responsibilities of the Verification Governor.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"check_hypothesis_evidence",
+"detect_branch_contradictions",
+"detect_unsupported_inference",
+"check_scope_boundary",
+"detect_repeated_loops",
+"reduce_overconfidence",
+"determine_human_review_need",
+"prepare_verified_material_for_compression"
+]
+},
+"uniqueItems": true
+},
+"input_contract": {
+"type": "object",
+"description": "Input required by the Verification Governor.",
+"additionalProperties": false,
+"required": [
+"required_inputs"
+],
+"properties": {
+"required_inputs": {
+"type": "array",
+"description": "Required input fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"initial_question",
+"counter_questions",
+"self_dialogue_trace",
+"candidate_hypotheses",
+"tested_hypotheses",
+"contradiction_findings",
+"selected_branches",
+"summary_for_verification"
+]
+},
+"uniqueItems": true
+},
+"optional_inputs": {
+"type": "array",
+"description": "Optional input fields.",
+"minItems": 0,
+"items": {
+"type": "string",
+"enum": [
+"source_context",
+"evidence_context",
+"risk_context",
+"known_constraints",
+"prior_trace",
+"user_intent",
+"previous_decision"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"output_contract": {
+"type": "object",
+"description": "Output produced by the Verification Governor.",
+"additionalProperties": false,
+"required": [
+"required_outputs"
+],
+"properties": {
+"required_outputs": {
+"type": "array",
+"description": "Required output fields.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"verification_findings",
+"evidence_findings",
+"contradiction_findings",
+"unsupported_inference_findings",
+"scope_findings",
+"confidence_adjustments",
+"summary_for_compression",
+"decision"
+]
+},
+"uniqueItems": true
+}
+}
+},
+"verification_findings": {
+"type": "array",
+"description": "Example or configured verification findings produced by this layer.",
+"minItems": 1,
+"items": {
+"$ref": "#/$defs/verification_finding"
+}
+},
+"decision_policy": {
+"type": "object",
+"description": "Policy for deciding what happens after verification runs.",
+"additionalProperties": false,
+"required": [
+"allowed_decisions",
+"default_decision"
+],
+"properties": {
+"allowed_decisions": {
+"type": "array",
+"description": "Allowed decisions after this layer runs.",
+"minItems": 1,
+"items": {
+"type": "string",
+"enum": [
+"continue_to_compression",
+"hold_for_evidence",
+"return_to_self_dialogue",
+"return_to_counter_question",
+"request_human_review",
+"stop_cycle"
+]
+},
+"uniqueItems": true
+},
+"default_decision": {
+"type": "string",
+"description": "Default decision when no blocking issue is found.",
+"enum": [
+"continue_to_compression",
+"hold_for_evidence",
+"return_to_self_dialogue",
+"return_to_counter_question",
+"request_human_review",
+"stop_cycle"
+]
+}
+}
+},
+"safety_controls": {
+"type": "object",
+"description": "Controls that prevent unverified hypotheses from becoming overconfident conclusions.",
+"additionalProperties": false,
+"required": [
+"evidence_required",
+"contradiction_check_required",
+"unsupported_inference_check_required",
+"loop_check_required",
+"confidence_adjustment_required",
+"human_review_gate"
+],
+"properties": {
+"evidence_required": {
+"type": "boolean",
+"description": "Whether evidence must be checked before continuing."
+},
+"contradiction_check_required": {
+"type": "boolean",
+"description": "Whether contradictions must be checked before continuing."
+},
+"unsupported_inference_check_required": {
+"type": "boolean",
+"description": "Whether unsupported inferences must be detected before continuing."
+},
+"loop_check_required": {
+"type": "boolean",
+"description": "Whether repeated loops must be checked before continuing."
+},
+"confidence_adjustment_required": {
+"type": "boolean",
+"description": "Whether confidence must be adjusted based on verification findings."
+},
+"human_review_gate": {
+"type": "boolean",
+"description": "Whether human review may be requested for unresolved, high-risk, or unsupported reasoning."
+}
+}
+}
+},
+"$defs": {
+"verification_finding": {
+"type": "object",
+"additionalProperties": false,
+"required": [
+"finding",
+"type",
+"target",
+"severity",
+"evidence_status",
+"contradiction_detected",
+"recommended_action"
+],
+"properties": {
+"finding": {
+"type": "string",
+"description": "The verification finding.",
+"minLength": 1
+},
+"type": {
+"type": "string",
+"description": "Type of verification finding.",
+"enum": [
+"evidence_check",
+"contradiction_check",
+"scope_check",
+"unsupported_inference_check",
+"loop_check",
+"confidence_check",
+"human_review_check"
+]
+},
+"target": {
+"type": "string",
+"description": "The hypothesis, branch, inference, scope, loop, confidence level, or review condition being checked.",
+"minLength": 1
+},
+"severity": {
+"type": "string",
+"description": "Severity of the verification finding.",
+"enum": [
+"info",
+"low",
+"medium",
+"high",
+"critical"
+]
+},
+"evidence_status": {
+"type": "string",
+"description": "Evidence status for the target.",
+"enum": [
+"supported",
+"partially_supported",
+"unsupported",
+"missing",
+"not_applicable"
+]
+},
+"contradiction_detected": {
+"type": "boolean",
+"description": "Whether a contradiction was detected."
+},
+"recommended_action": {
+"type": "string",
+"description": "Recommended action after this verification finding.",
+"enum": [
+"continue",
+"reduce_confidence",
+"request_evidence",
+"return_to_self_dialogue",
+"return_to_counter_question",
+"request_human_review",
+"stop_cycle"
+]
+}
+}
+}
+}
+}
